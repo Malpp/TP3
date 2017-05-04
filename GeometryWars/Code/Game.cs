@@ -124,15 +124,15 @@ namespace GeometryWars
 
 			entities.Add(Hero.GetInstance());
 
-			//entities.Add(new Shooter(100,100));
+			entities.Add(new Shooter(250,300));
 
-			//entities.Add(new Spinner(200,100));
+			entities.Add(new Spinner(200,100));
 
 			entities.Add(new Sniper(100, 200));
 
 			//entities.Add(new MiniSniper(100, 100, 180));
 
-			camera = new View(new Vector2f(GAME_WIDTH * 0.5f, GAME_HEIGHT * 0.5f), new Vector2f(800,800));
+			camera = new View(new Vector2f(GAME_WIDTH * 0.5f, GAME_HEIGHT * 0.5f), new Vector2f(1000,1000));
 
 			window.SetView(camera);
 

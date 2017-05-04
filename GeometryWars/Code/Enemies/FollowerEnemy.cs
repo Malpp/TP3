@@ -33,13 +33,23 @@ namespace GeometryWars.Code.Enemies
 		public override void Update(float deltaTime, IEnumerable<BaseEntity> entities = null)
 		{
 
-			float angleBetweenPoints = Common.AngleBetweenTwoPoints(Pos, Hero.GetInstance().Pos);
+			float angle1 = Common.AngleBetweenTwoPoints(Pos, Hero.GetInstance().Pos);
 
-			if (Math.Abs(Math.Abs(angleBetweenPoints) - Math.Abs(Angle) % 360) < 1f)
-			{
-				angle = angleBetweenPoints;
-			}
-			else if (angleBetweenPoints >= 0)
+
+			float angle2 = Common.AngleBetweenTwoPoints(Hero.GetInstance().Pos, Pos) - Angle % 360;
+			float distance = Common.DistanceBetweenTwoPoints(Pos + Common.MovePointByAngle(SPEED * deltaTime, Angle % 360), Hero.GetInstance().Pos);
+			float newDistance = Common.DistanceBetweenTwoPoints(Pos + Common.MovePointByAngle(SPEED * deltaTime, Angle % 360 + angleSPEED * deltaTime), Hero.GetInstance().Pos);
+
+			//Console.WriteLine("{0} {1}", 
+			//	Common.DistanceBetweenTwoPoints(Pos + Common.MovePointByAngle(SPEED * deltaTime, Angle), Hero.GetInstance().Pos),
+			//	Common.DistanceBetweenTwoPoints(Pos + Common.MovePointByAngle(SPEED * deltaTime, Angle + angleSPEED), Hero.GetInstance().Pos));
+
+			//if (Math.Abs(Math.Abs(angleBetweenPoints) - Math.Abs(Angle) % 360) < 1f)
+			//{
+			//	angle = angleBetweenPoints;
+			//}
+			//else 
+			if (newDistance < distance)
 			{
 				angle += angleSPEED * deltaTime;
 			}
@@ -50,5 +60,6 @@ namespace GeometryWars.Code.Enemies
 
 			base.Update(deltaTime, entities);
 		}
+		
 	}
 }

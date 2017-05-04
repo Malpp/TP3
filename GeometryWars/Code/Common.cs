@@ -38,6 +38,11 @@ namespace GeometryWars
 			return (float)Math.Atan2(p2.Y - p1.Y, p2.X - p1.X) * 180f / (float)Math.PI;
 		}
 
+		public static float ArcLegnth(float angle, float radius)
+		{
+			return angle / 360 * 2 * (float)Math.PI * radius;
+		}
+
 		/// <summary>
 		/// Convertit un angle en radian vers un angle en degré
 		/// </summary>
