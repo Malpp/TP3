@@ -22,6 +22,14 @@ namespace GeometryWars.Code
 
 		}
 
+		public Enemy(float x, float y, float speed, Texture texture, float angle)
+			: base(x, y, speed, texture, angle)
+		{
+
+
+
+		}
+
 		public Enemy(float x, float y)
 			: base(x,y, enemySpeed, enemyTexture)
 		{
@@ -30,7 +38,7 @@ namespace GeometryWars.Code
 
 		}
 
-		protected override Vector2f GetMove()
+		protected override Vector2f GetMove(float timeDelta)
 		{
 
 			return new Vector2f(0,0);

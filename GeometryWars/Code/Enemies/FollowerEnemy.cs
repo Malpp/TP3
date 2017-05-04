@@ -17,7 +17,13 @@ namespace GeometryWars.Code.Enemies
 			
 		}
 
-		protected override Vector2f GetMove()
+		public FollowerEnemy(float x, float y, float speed, Texture texture, float angle)
+			: base(x, y, speed, texture, angle)
+		{
+
+		}
+
+		protected override Vector2f GetMove(float timeDelta)
 		{
 
 			return Common.MovePointByAngle(SPEED, Angle);
@@ -27,17 +33,19 @@ namespace GeometryWars.Code.Enemies
 		public override void Update(float deltaTime, IEnumerable<BaseEntity> entities = null)
 		{
 
-			if (Common.AngleBetweenTwoPoints(Pos, Hero.GetInstance().Pos) - Angle < 1f)
+			float angleBetweenPoints = Common.AngleBetweenTwoPoints(Pos, Hero.GetInstance().Pos);
+
+			if (Math.Abs(Math.Abs(angleBetweenPoints) - Math.Abs(Angle) % 360) < 1f)
 			{
-				angle = Common.AngleBetweenTwoPoints(Pos, Hero.GetInstance().Pos);
+				angle = angleBetweenPoints;
 			}
-			else if (Common.AngleBetweenTwoPoints(Pos, Hero.GetInstance().Pos) >= 0)
+			else if (angleBetweenPoints >= 0)
 			{
-				angle += angleSPEED;
+				angle += angleSPEED * deltaTime;
 			}
 			else
 			{
-				angle -= angleSPEED;
+				angle -= angleSPEED * deltaTime;
 			}
 
 			base.Update(deltaTime, entities);

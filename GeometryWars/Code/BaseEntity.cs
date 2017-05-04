@@ -13,7 +13,7 @@ namespace GeometryWars.Code
 	{
 
 		protected float SPEED;
-		protected float angleSPEED = 0.15f;
+		protected float angleSPEED = 200f;
 
 		private static Texture defaultTexture = new Texture("Assets/Textures/base.png");
 		protected Sprite sprite;
@@ -22,10 +22,23 @@ namespace GeometryWars.Code
 		protected bool toDelete = false;
 		private Vector2f newPos;
 
-		public bool ToDelete => toDelete;
-		public float Angle => angle;
-		public Vector2f Pos => sprite.Position;
-		public FloatRect GlobalBounds =>sprite.GetGlobalBounds();
+		public bool ToDelete
+		{
+			get { return toDelete; }
+		} 
+			
+		public float Angle
+		{
+			get { return angle; }
+		} 
+		public Vector2f Pos 
+		{
+			get { return sprite.Position; }
+		}
+		public FloatRect GlobalBounds
+		{
+			get { return sprite.GetGlobalBounds(); }
+		} 
 
 		public BaseEntity(float x, float y, float speed, Texture texture = null, float angle = 0)
 		{
@@ -46,7 +59,7 @@ namespace GeometryWars.Code
 
 		}
 
-		protected virtual Vector2f GetMove()
+		protected virtual Vector2f GetMove(float timeDelta)
 		{
 			
 			Vector2f pos = new Vector2f();
@@ -55,14 +68,14 @@ namespace GeometryWars.Code
 				pos += Common.MovePointByAngle(SPEED, angle);
 
 			if (Keyboard.IsKeyPressed(Keyboard.Key.A))
-				angle -= angleSPEED;
+				angle -= angleSPEED * timeDelta;
 				//pos += new Vector2f(-1, 0);
 
 			if (Keyboard.IsKeyPressed(Keyboard.Key.S))
 				pos -= Common.MovePointByAngle(SPEED, angle);
 
 			if (Keyboard.IsKeyPressed(Keyboard.Key.D))
-				angle += angleSPEED;
+				angle += angleSPEED * timeDelta;
 				//pos += new Vector2f(1, 0);
 
 			return pos;
@@ -77,7 +90,7 @@ namespace GeometryWars.Code
 
 				if (sprite.GetGlobalBounds().Intersects(baseEntity.GlobalBounds))
 				{
-					return baseEntity;
+					HandleCollision(baseEntity);
 				}
 
 			}
@@ -120,22 +133,20 @@ namespace GeometryWars.Code
 		protected virtual void HandleCollision(BaseEntity entity)
 		{
 
-			sprite.Position -= newPos * 2;
+			sprite.Position -= newPos;
 
 		}
 
 		public virtual void Update(float deltaTime, IEnumerable<BaseEntity> entities = null)
 		{
 
-			newPos = GetMove() * deltaTime;
+			newPos = GetMove(deltaTime) * deltaTime;
 
 			sprite.Position += newPos;
 
 			if (entities != null)
 			{
-				BaseEntity entity = Collides(entities);
-				if (entity != null)
-					HandleCollision(entity);
+				Collides(entities);
 			}
 
 			if(IsAtEdge())

@@ -84,7 +84,7 @@ namespace GeometryWars
 
 			clock.Restart();
 
-			while (window.IsOpen && !Keyboard.IsKeyPressed(Keyboard.Key.Escape))
+			while (window.IsOpen && IsGameClosing())
 			{
 
 				//Call the Events
@@ -101,6 +101,19 @@ namespace GeometryWars
 
 		}
 
+		bool IsGameClosing()
+		{
+
+			if (Keyboard.IsKeyPressed(Keyboard.Key.Escape))
+			{
+				window.Close();
+				return false;
+			}
+
+			return true;
+
+		}
+
 		/// <summary>
 		/// Sets up global vars to the program
 		/// </summary>
@@ -111,9 +124,13 @@ namespace GeometryWars
 
 			entities.Add(Hero.GetInstance());
 
-			entities.Add(new Shooter(100,100));
+			//entities.Add(new Shooter(100,100));
 
-			entities.Add(new Spinner(200,100));
+			//entities.Add(new Spinner(200,100));
+
+			entities.Add(new Sniper(100, 200));
+
+			//entities.Add(new MiniSniper(100, 100, 180));
 
 			camera = new View(new Vector2f(GAME_WIDTH * 0.5f, GAME_HEIGHT * 0.5f), new Vector2f(800,800));
 
@@ -157,6 +174,9 @@ namespace GeometryWars
 
 			#endregion
 
+			if(Keyboard.IsKeyPressed(Keyboard.Key.E))
+				entities.Add(new MiniSniper(new Vector2f(100,100), -90));
+
 			foreach (var entity in entities)
 			{
 				if(entity.GetType() == typeof(Hero))
@@ -165,10 +185,29 @@ namespace GeometryWars
 					entity.Update(gameTime.AsSeconds());
 			}
 
+			List<MiniSniper> miniSnipersTemp = new List<MiniSniper>();
+
+			foreach (var baseEntity in entities)
+			{
+				if (baseEntity.GetType() == typeof(Sniper) && baseEntity.ToDelete)
+				{
+
+					miniSnipersTemp.Add(new MiniSniper(baseEntity.Pos + Common.MovePointByAngle(MiniSniper.Size, 0), 0));
+					miniSnipersTemp.Add(new MiniSniper(baseEntity.Pos + Common.MovePointByAngle(MiniSniper.Size, 118), 118));
+					miniSnipersTemp.Add(new MiniSniper(baseEntity.Pos + Common.MovePointByAngle(MiniSniper.Size, 236), 236));
+
+				}
+			}
+
+			foreach (MiniSniper miniSniper in miniSnipersTemp)
+			{
+				entities.Add(miniSniper);
+			}
+
 			entities.RemoveAll(x => x.ToDelete);
 
 			//Because the player will always be first in the list
-			camera.Move(entities[0].Pos - camera.Center);
+			camera.Move(Hero.GetInstance().Pos - camera.Center);
 
 			window.SetView(camera);
 

@@ -27,21 +27,25 @@ namespace GeometryWars.Code.Enemies
 
 		}
 
-		protected override Vector2f GetMove()
+		protected override Vector2f GetMove(float timeDelta)
 		{
 
-			if (Common.DistanceBetweenTwoPoints(Hero.GetInstance().Pos, Pos) > 200f)
+			float distance = Common.DistanceBetweenTwoPoints(Hero.GetInstance().Pos, Pos);
+
+			if (distance > 210f)
 			{
 				
 				return Common.MovePointByAngle(shooterSpeed, Angle);
 
 			}
-			else
+			else if(distance < 200f)
 			{
 
 				return Common.MovePointByAngle(-shooterSpeed, Angle);
 
 			}
+
+			return new Vector2f();
 
 		}
 

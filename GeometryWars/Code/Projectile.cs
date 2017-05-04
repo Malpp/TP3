@@ -22,7 +22,7 @@ namespace GeometryWars.Code
 
 		}
 
-		protected override Vector2f GetMove()
+		protected override Vector2f GetMove(float timeDelta)
 		{
 
 			return Common.MovePointByAngle(PROJECTILE_SPEED, Angle);
