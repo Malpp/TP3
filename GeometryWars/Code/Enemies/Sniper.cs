@@ -22,25 +22,21 @@ namespace GeometryWars.Code.Enemies
 		private float fireDelta;
 		private bool canFire;
 
-		private List<EnemyProjectile> projectiles;
-
-		public Sniper(float x, float y)
-			: base(x, y, 0, sniperTexture)
+		public Sniper(Vector2f pos)
+			: base(pos, 0, 0, 0, sniperTexture)
 		{
 			
 			sniperTurretSprite = new Sprite(sniperTurreTexture);
 			sniperTurretSprite.Origin = new Vector2f(sniperTurreTexture.Size.X * 0.25f, sniperTurreTexture.Size.Y * 0.5f);
-			sniperTurretSprite.Position = new Vector2f(x,y);
+			sniperTurretSprite.Position = Pos;
 
 			sniperChargingSprite = new Sprite(sniperChargingTexture);
 			sniperChargingSprite.Origin = (Vector2f)sniperChargingTexture.Size * 0.5f;
 			sniperChargingSprite.Position = Pos;
 
-			projectiles = new List<EnemyProjectile>();
-
 		}
 
-		public override void Update(float deltaTime, IEnumerable<BaseEntity> entities = null)
+		public override void Update(float timeDelta, IEnumerable<Drawable> entities = null)
 		{
 
 			if (canFire)
@@ -49,14 +45,14 @@ namespace GeometryWars.Code.Enemies
 				canFire = false;
 				sniperChargingSprite.Color -= new Color(0,0,0,0);
 
-				projectiles.Add(new EnemyProjectile(Pos, sniperTurretSprite.Rotation));
+				EntityManager.AddEnemyProjectile(new EnemyProjectile(Pos, sniperTurretSprite.Rotation));
 
 			}
 
 			if (!canFire)
 			{
 
-				fireDelta += deltaTime;
+				fireDelta += timeDelta;
 
 				sniperChargingSprite.Color = new Color(
 					sniperChargingSprite.Color.R, 
@@ -76,14 +72,7 @@ namespace GeometryWars.Code.Enemies
 
 			sniperTurretSprite.Rotation = Common.AngleBetweenTwoPoints(Pos, Hero.GetInstance().Pos);
 
-			foreach (EnemyProjectile enemyProjectile in projectiles)
-			{
-				enemyProjectile.Update(deltaTime, new []{Hero.GetInstance()});
-			}
-
-			projectiles.RemoveAll(x => x.ToDelete);
-
-			base.Update(deltaTime, entities);
+			base.Update(timeDelta, entities);
 		}
 
 		public override void Draw(RenderTarget window)
@@ -93,11 +82,6 @@ namespace GeometryWars.Code.Enemies
 			window.Draw(sniperChargingSprite);
 
 			window.Draw(sniperTurretSprite);
-
-			foreach (EnemyProjectile enemyProjectile in projectiles)
-			{
-				enemyProjectile.Draw(window);
-			}
 
 		}
 	}

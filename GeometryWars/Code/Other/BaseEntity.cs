@@ -82,15 +82,15 @@ namespace GeometryWars.Code
 
 		}
 
-		public BaseEntity Collides(IEnumerable<BaseEntity> entity)
+		public BaseEntity Collides(IEnumerable<Drawable> entities)
 		{
 
-			foreach (BaseEntity baseEntity in entity)
+			foreach (Drawable entity in entities)
 			{
 
-				if (sprite.GetGlobalBounds().Intersects(baseEntity.GlobalBounds))
+				if (sprite.GetGlobalBounds().Intersects(entity.GlobalBounds))
 				{
-					HandleCollision(baseEntity);
+					HandleCollision(entity);
 				}
 
 			}
@@ -130,14 +130,14 @@ namespace GeometryWars.Code
 
 		}
 
-		protected virtual void HandleCollision(BaseEntity entity)
+		protected virtual void HandleCollision(Drawable entity)
 		{
 
 			sprite.Position -= newPos;
 
 		}
 
-		public virtual void Update(float deltaTime, IEnumerable<BaseEntity> entities = null)
+		public virtual void Update(float deltaTime, IEnumerable<Drawable> entities = null)
 		{
 
 			newPos = GetMove(deltaTime) * deltaTime;

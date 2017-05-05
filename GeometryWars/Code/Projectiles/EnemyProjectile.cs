@@ -18,10 +18,10 @@ namespace GeometryWars.Code
 
 		}
 
-		protected override void HandleCollision(BaseEntity entity)
+		protected override void HandleCollision(Drawable entity)
 		{
 
-			toDelete = true;
+			Delete();
 			//Do this l8ter or something
 			//Hero.GetInstance().TakeDamage();
 

@@ -13,32 +13,29 @@ namespace GeometryWars.Code.Enemies
 
 		private static Texture shooterTexture = new Texture("Assets/Textures/shooter.png");
 		private const float shooterSpeed = 300f;
+		private const float shooterAngleSpeed = 200f;
 		private const float fireSpeed = 0.3f;
 		private float fireDelta = 0;
 		private bool canFire = false;
 		private bool correctAngle = false;
-		private List<EnemyProjectile> enemyProjectiles;
 
-		public Shooter(float x, float y)
-			: base(x, y, shooterSpeed, shooterTexture)
+		public Shooter(Vector2f pos, float initAngle)
+			: base(pos, initAngle, shooterSpeed, shooterAngleSpeed, shooterTexture)
 		{
-			
-			enemyProjectiles = new List<EnemyProjectile>();
 
 		}
 
-		protected override Vector2f GetMove(float timeDelta)
+		protected override Vector2f GetNextMove(float timeDelta)
 		{
-
 			float distance = Common.DistanceBetweenTwoPoints(Hero.GetInstance().Pos, Pos);
 
 			if (distance > 210f)
 			{
-				
+
 				return Common.MovePointByAngle(shooterSpeed, Angle);
 
 			}
-			else if(distance < 200f)
+			else if (distance < 200f)
 			{
 
 				return Common.MovePointByAngle(-shooterSpeed, Angle);
@@ -46,13 +43,14 @@ namespace GeometryWars.Code.Enemies
 			}
 
 			return new Vector2f();
-
 		}
 
-		public override void Update(float deltaTime, IEnumerable<BaseEntity> entities = null)
+		public override void Update(float timeDelta, IEnumerable<Drawable> entities = null)
 		{
 
-			if (Common.AngleBetweenTwoPoints(Pos, Hero.GetInstance().Pos) - Angle < 1f)
+			//Console.WriteLine("{0} {1}",Common.AngleBetweenTwoPoints(Pos, Hero.GetInstance().Pos), Angle % 360);
+
+			if (Math.Abs( Common.AngleBetweenTwoPoints(Pos, Hero.GetInstance().Pos) - Angle % 360) < 1f)
 				correctAngle = true;
 			else
 				correctAngle = false;
@@ -60,13 +58,13 @@ namespace GeometryWars.Code.Enemies
 			if (canFire && correctAngle)
 			{
 				canFire = false;
-				enemyProjectiles.Add(new EnemyProjectile(Pos + Common.MovePointByAngle(shooterTexture.Size.X * 0.3f, Angle), Angle));
+				EntityManager.AddEnemyProjectile(new EnemyProjectile(Pos + Common.MovePointByAngle(shooterTexture.Size.X * 0.3f, Angle), Angle));
 			}
 
 			if (!canFire)
 			{
 
-				fireDelta += deltaTime;
+				fireDelta += timeDelta;
 
 				if (fireDelta > fireSpeed)
 				{
@@ -76,25 +74,7 @@ namespace GeometryWars.Code.Enemies
 
 			}
 
-			foreach (EnemyProjectile enemyProjectile in enemyProjectiles)
-			{
-				enemyProjectile.Update(deltaTime, new []{Hero.GetInstance()});
-			}
-
-			enemyProjectiles.RemoveAll(x => x.ToDelete);
-
-			base.Update(deltaTime, entities);
-		}
-
-		public override void Draw(RenderTarget window)
-		{
-
-			foreach (EnemyProjectile enemyProjectile in enemyProjectiles)
-			{
-				enemyProjectile.Draw(window);
-			}
-
-			base.Draw(window);
+			base.Update(timeDelta, entities);
 		}
 	}
 }

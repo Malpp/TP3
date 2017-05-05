@@ -66,6 +66,8 @@ namespace GeometryWars
 
 			window = new RenderWindow(new VideoMode(windowWidth, windowHeight), title, style);
 
+			window.SetFramerateLimit(240);
+
 			//Add the Closed function to the window
 			window.Closed += window_Closed;
 
@@ -120,15 +122,7 @@ namespace GeometryWars
 		void InitGame()
 		{
 
-			entities = new List<BaseEntity>();
-
-			entities.Add(Hero.GetInstance());
-
-			entities.Add(new Shooter(250,300));
-
-			entities.Add(new Spinner(200,100));
-
-			entities.Add(new Sniper(100, 200));
+			EntityManager.AddEnemy(new Shooter(new Vector2f(100,100), 0));
 
 			//entities.Add(new MiniSniper(100, 100, 180));
 
@@ -174,37 +168,12 @@ namespace GeometryWars
 
 			#endregion
 
-			if(Keyboard.IsKeyPressed(Keyboard.Key.E))
-				entities.Add(new MiniSniper(new Vector2f(100,100), -90));
-
-			foreach (var entity in entities)
+			if (Keyboard.IsKeyPressed(Keyboard.Key.E))
 			{
-				if(entity.GetType() == typeof(Hero))
-					entity.Update(gameTime.AsSeconds(), entities.Where(x => x != entity));
-				else
-					entity.Update(gameTime.AsSeconds());
+				EntityManager.AddEnemy(new Shooter(new Vector2f(100,100), -90));
 			}
 
-			List<MiniSniper> miniSnipersTemp = new List<MiniSniper>();
-
-			foreach (var baseEntity in entities)
-			{
-				if (baseEntity.GetType() == typeof(Sniper) && baseEntity.ToDelete)
-				{
-
-					miniSnipersTemp.Add(new MiniSniper(baseEntity.Pos + Common.MovePointByAngle(MiniSniper.Size, 0), 0));
-					miniSnipersTemp.Add(new MiniSniper(baseEntity.Pos + Common.MovePointByAngle(MiniSniper.Size, 118), 118));
-					miniSnipersTemp.Add(new MiniSniper(baseEntity.Pos + Common.MovePointByAngle(MiniSniper.Size, 236), 236));
-
-				}
-			}
-
-			foreach (MiniSniper miniSniper in miniSnipersTemp)
-			{
-				entities.Add(miniSniper);
-			}
-
-			entities.RemoveAll(x => x.ToDelete);
+			EntityManager.Update(gameTime.AsSeconds());
 
 			//Because the player will always be first in the list
 			camera.Move(Hero.GetInstance().Pos - camera.Center);
@@ -224,11 +193,7 @@ namespace GeometryWars
 			window.Draw(borderSprite);
 
 			//Code goes here lul
-			foreach (var entity in entities)
-			{
-				entity.Draw(window);
-			}
-
+			EntityManager.Draw(window);
 
 			window.Display();
 

@@ -12,13 +12,14 @@ namespace GeometryWars.Code.Enemies
 	{
 
 		private static Texture spinnerTexture = new Texture("Assets/Textures/spinner.png");
-		private const float spinnerSpeed = 200;
+		private const float spinnerSpeed = 200f;
+		private const float spinnerAngleSpeed = 200f;
 		private float spinnerRotation;
 		private const float spinnerRotationSpeed = 400f;
 		private Sprite spinnerSprite;
 
-		public Spinner(float x, float y)
-			: base(x, y, spinnerSpeed, spinnerTexture)
+		public Spinner(Vector2f pos, float initAngle)
+			: base(pos, initAngle, spinnerSpeed, spinnerAngleSpeed, spinnerTexture)
 		{
 			
 			sprite.Color = Color.Transparent;
@@ -28,15 +29,15 @@ namespace GeometryWars.Code.Enemies
 
 		}
 
-		public override void Update(float deltaTime, IEnumerable<BaseEntity> entities = null)
+		public override void Update(float timeDelta, IEnumerable<Drawable> entities = null)
 		{
 
-			spinnerRotation += spinnerRotationSpeed * deltaTime;
+			spinnerRotation += spinnerRotationSpeed * timeDelta;
 
 			spinnerSprite.Position = Pos;
 			spinnerSprite.Rotation = spinnerRotation;
 
-			base.Update(deltaTime, entities);
+			base.Update(timeDelta, entities);
 
 		}
 
