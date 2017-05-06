@@ -10,6 +10,7 @@ using SFML.System;
 using System.Diagnostics;
 using GeometryWars.Code;
 using GeometryWars.Code.Enemies;
+using GeometryWars.Code.Main;
 
 namespace GeometryWars
 {
@@ -35,8 +36,8 @@ namespace GeometryWars
 
 		#endregion
 
-		private List<BaseEntity> entities;
-		
+		public static Random rnd = new Random();
+
 		private static Texture borderTexture = new Texture("Assets/Textures/border.png");
 		private static Sprite borderSprite = new Sprite(borderTexture);
 
@@ -50,6 +51,11 @@ namespace GeometryWars
 		public static float GAME_Y_LIMIT
 		{
 			get { return borderTexture.Size.Y; }
+		}
+
+		public static Vector2f GAME_SIZE
+		{
+			get { return (Vector2f)borderTexture.Size; }
 		}
 
 		private View camera;
@@ -66,7 +72,7 @@ namespace GeometryWars
 
 			window = new RenderWindow(new VideoMode(windowWidth, windowHeight), title, style);
 
-			window.SetFramerateLimit(240);
+			//window.SetFramerateLimit(240);
 
 			//Add the Closed function to the window
 			window.Closed += window_Closed;
@@ -122,11 +128,11 @@ namespace GeometryWars
 		void InitGame()
 		{
 
-			EntityManager.AddEnemy(new Shooter(new Vector2f(100,100), 0));
+			EntityManager.AddEnemy(new Shooter(new Vector2f(100, 100), 0));
 
 			//entities.Add(new MiniSniper(100, 100, 180));
 
-			camera = new View(new Vector2f(GAME_WIDTH * 0.5f, GAME_HEIGHT * 0.5f), new Vector2f(1000,1000));
+			camera = new View(new Vector2f(GAME_WIDTH * 0.5f, GAME_HEIGHT * 0.5f), new Vector2f(1100, 1100));
 
 			window.SetView(camera);
 
@@ -170,15 +176,18 @@ namespace GeometryWars
 
 			if (Keyboard.IsKeyPressed(Keyboard.Key.E))
 			{
-				EntityManager.AddEnemy(new Shooter(new Vector2f(100,100), -90));
+				for (int i = 0; i < 500; i++)
+				{
+					EntityManager.AddEnemy(new Shooter(new Vector2f(100 + i, 100), -90));
+				}
 			}
 
 			EntityManager.Update(gameTime.AsSeconds());
 
-			//Because the player will always be first in the list
-			camera.Move(Hero.GetInstance().Pos - camera.Center);
-
-			window.SetView(camera);
+			foreach (Joystick.Axis axis in Enum.GetValues(typeof(Joystick.Axis)))
+			{
+				//Console.Write(axis + ": " + Joystick.GetAxisPosition(0,axis) + " ");
+			}
 
 		}
 

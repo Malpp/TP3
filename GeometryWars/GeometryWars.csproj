@@ -77,6 +77,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Code\Main\Camera.cs" />
+    <Compile Include="Code\Main\Controller.cs" />
     <Compile Include="Code\Other\BaseEntity.cs" />
     <Compile Include="Code\Base\Drawable.cs" />
     <Compile Include="Code\Base\FollowerEnemy.cs" />

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GeometryWars.Code.Enemies;
+using GeometryWars.Code.Main;
 using SFML.Graphics;
 using SFML.System;
 
@@ -37,6 +38,8 @@ namespace GeometryWars.Code
 
 		public static void Update(float timeDelta)
 		{
+
+			Controller.Update();
 
 			//Update the hero
 			hero.Update(timeDelta, enemies);
@@ -116,6 +119,8 @@ namespace GeometryWars.Code
 			}
 
 			hero.Draw(window);
+
+			Camera.Update(window, hero.Pos);
 
 		}
 
