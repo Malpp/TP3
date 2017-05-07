@@ -50,7 +50,7 @@ namespace GeometryWars.Code
 		public override void Delete()
 		{
 
-			EntityManager.AddEmitter(new EnemyExplosionEmiter(Pos, 1, color));
+			EntityManager.AddEmitter(new EnemyExplosionEmiter(Pos, 5, color));
 
 			base.Delete();
 		}

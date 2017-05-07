@@ -34,8 +34,20 @@ namespace GeometryWars.Code.Main
 			sprite.Color -= new Color(0,0,0, (byte)((200 - starSpeed) / 200 * 255));
 		}
 
-		public void Update(float timeDelta, float angle, float shipSpeed)
+		public void Update(float timeDelta)
 		{
+
+			Hero hero = Hero.GetInstance();
+
+			float angle = Common.AngleBetweenTwoPoints(
+				new Vector2f(),
+				hero.Pos - hero.LastPos
+			);
+			float shipSpeed = Common.DistanceBetweenTwoPoints(
+				                  hero.Pos,
+				                  hero.LastPos
+			                  ) / (Hero.Speed * timeDelta);
+						
 
 			pos += Common.MovePointByAngle(starSpeed * shipSpeed, angle + 180) * timeDelta;
 

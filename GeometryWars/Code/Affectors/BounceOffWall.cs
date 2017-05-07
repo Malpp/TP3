@@ -22,7 +22,7 @@ namespace GeometryWars.Code.Affectors
 
 			particle.Rotation = Common.AngleBetweenTwoPoints(new Vector2f(), particle.Velocity);
 
-			//particle.Color = new Color(particle.Color.R, particle.Color.G, particle.Color.B, (byte)(256f * particle.RemainingRatio));
+			particle.Color = new Color(particle.Color.R, particle.Color.G, particle.Color.B, (byte)(50f + 206f * particle.RemainingRatio));
 
 		}
 

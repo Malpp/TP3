@@ -3,27 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GeometryWars.Code.Base;
 using NetEXT.Particles;
 using SFML.Graphics;
 using SFML.System;
 
 namespace GeometryWars.Code.Particles
 {
-	class ProjectileExplosionParticle : Particle
+	class ProjectileExplosionParticle : BaseParticle
 	{
 		private const float particleSpeed = 500f;
-		private const float particleDuration = 0.1f;
+		private const float particleDuration = 0.15f;
 
-		public ProjectileExplosionParticle(Vector2f pos)
-			: base(Time.FromSeconds(particleDuration))
+		public ProjectileExplosionParticle(Vector2f pos, Color color)
+			: base(pos, color, particleDuration, particleSpeed)
 		{
-
-			float angle = Game.rnd.Next(0, 360);
-
-			Rotation = angle;
-			Position = pos;
-			Color = Color.Cyan;
-			Velocity = Common.MovePointByAngle(particleSpeed, angle);
 
 		}
 

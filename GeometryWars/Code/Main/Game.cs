@@ -10,6 +10,7 @@ using SFML.System;
 using System.Diagnostics;
 using GeometryWars.Code;
 using GeometryWars.Code.Enemies;
+using GeometryWars.Code.Main;
 using NetEXT.MathFunctions;
 using NetEXT.Particles;
 
@@ -42,6 +43,10 @@ namespace GeometryWars
 		private static Texture borderTexture = new Texture("Assets/Textures/border.png");
 		public static readonly Texture ParticleTexture = new Texture("Assets/Particles/particle.png");
 		private static Sprite borderSprite = new Sprite(borderTexture);
+		RenderTexture renderTexture = new RenderTexture(GAME_WIDTH, GAME_HEIGHT);
+		Sprite renderTextureSprite = new Sprite();
+		Shader horiShader = new Shader(null, "Assets/Shaders/hori.frag");
+		Shader myShader;
 
 		private const float SpawnRadius = 200f;
 		private float currentMaxEnemies;
@@ -132,6 +137,15 @@ namespace GeometryWars
 		void InitGame()
 		{
 
+			myShader = new Shader(null, "Assets/Shaders/pixelate.frag");
+			myShader.SetParameter("texture", Shader.CurrentTexture);
+			myShader.SetParameter("pixel_threshold", 200);
+
+			horiShader.SetParameter("sourceTexture", Shader.CurrentTexture);
+			horiShader.SetParameter("sigma", 0.5f);
+			horiShader.SetParameter("width", renderTexture.Size.X);
+			horiShader.SetParameter("glowMultiplier", 1.5f);
+
 			currentMaxEnemies = 5;
 			//EntityManager.AddEnemy(new Sniper(new Vector2f(300f,300f)));
 
@@ -183,27 +197,23 @@ namespace GeometryWars
 
 			EntityManager.Update(gameTime.AsSeconds());
 
-			if (EntityManager.EnemyCount < currentMaxEnemies)
+			if (!Bomb.CanEnemiesSpawn)
+			{
+				EntityManager.DeleteAllEnemies();
+			}
+
+			if (EntityManager.EnemyCount < currentMaxEnemies && Bomb.CanEnemiesSpawn)
 			{
 
-				float xSpawnPos;
-				float ySpawnPos;
+				Vector2f spawnPos;
 
 				Vector2f heroPos = Hero.GetInstance().Pos;
 
 				do
 				{
-					xSpawnPos = rnd.Next(0, (int)GAME_X_LIMIT);
-				} while (!(xSpawnPos + SpawnRadius < heroPos.X) &&
-				         !(xSpawnPos - SpawnRadius > heroPos.X));
+					spawnPos = new Vector2f(rnd.Next(50, (int)GAME_X_LIMIT - 50), rnd.Next(50, (int)GAME_Y_LIMIT - 50));
+				} while (Math.Abs(Common.DistanceBetweenTwoPoints(spawnPos, heroPos)) < SpawnRadius);
 
-				do
-				{
-					ySpawnPos = rnd.Next(0, (int)GAME_X_LIMIT);
-				} while (!(ySpawnPos + SpawnRadius < heroPos.Y) &&
-				         !(ySpawnPos - SpawnRadius > heroPos.Y));
-
-				Vector2f spawnPos = new Vector2f(xSpawnPos, ySpawnPos);
 				float spawnAngle = rnd.Next(0, 360);
 
 				Array values = Enum.GetValues(typeof(SpawnableEnemies));
@@ -235,11 +245,21 @@ namespace GeometryWars
 
 			window.Clear();
 
-			window.Draw(borderSprite);
+			renderTexture.Clear();
 
-			//Code goes here lul
-			EntityManager.Draw(window);
+			renderTexture.Draw(borderSprite);
 
+			EntityManager.Draw(renderTexture);
+
+			renderTexture.Display();
+
+			renderTextureSprite.Texture = renderTexture.Texture;
+
+			RenderStates states = new RenderStates();
+			states.Shader = myShader;
+
+			window.Draw(renderTextureSprite);
+			
 			window.Display();
 
 		}

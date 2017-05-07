@@ -46,6 +46,11 @@ namespace GeometryWars.Code
 		public override void Update(float timeDelta, IEnumerable<Drawable> entities = null)
 		{
 
+			if (Keyboard.IsKeyPressed(Keyboard.Key.Return) || Controller.GetBombKey())
+			{
+				Bomb.Fire(Pos);
+			}
+
 			if (Keyboard.IsKeyPressed(Keyboard.Key.Space) && canFire)
 			{
 				canFire = false;

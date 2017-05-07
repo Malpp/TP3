@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GeometryWars.Code.Affectors;
+using GeometryWars.Code.Base;
 using GeometryWars.Code.Enemies;
 using GeometryWars.Code.Main;
 using GeometryWars.Code.Projectiles;
@@ -120,7 +121,7 @@ namespace GeometryWars.Code
 			enemyProjectiles.RemoveAll(x => x.ToDelete);
 
 			//Update all heroProjectiles
-			foreach (Projectile projectile in heroProjectiles)
+			foreach (HeroProjectile projectile in heroProjectiles)
 			{
 				projectile.Update(timeDelta, enemies);
 			}
@@ -135,19 +136,11 @@ namespace GeometryWars.Code
 			{
 				foreach (Star star in stars)
 				{
-					star.Update(
-						timeDelta, 
-						Common.AngleBetweenTwoPoints(
-							new Vector2f(), 
-							hero.Pos - hero.LastPos
-						), 
-						Common.DistanceBetweenTwoPoints(
-							hero.Pos, 
-							hero.LastPos
-						) / (Hero.Speed * timeDelta)
-						);
+					star.Update(timeDelta);
 				}
 			}
+
+			Bomb.Update(timeDelta);
 
 			system.Update(Time.FromSeconds(timeDelta));
 
@@ -171,7 +164,7 @@ namespace GeometryWars.Code
 				projectile.Draw(window);
 			}
 
-			foreach (Projectile projectile in heroProjectiles)
+			foreach (HeroProjectile projectile in heroProjectiles)
 			{
 				projectile.Draw(window);
 			}
@@ -194,9 +187,21 @@ namespace GeometryWars.Code
 			enemyProjectiles.Add(projectile);
 		}
 
-		public static void AddEmitter(EmitterBase emitter)
+		public static void AddEmitter(BaseEmitter emitter)
 		{
-			system.AddEmitter(emitter, Time.FromSeconds(0.1f));
+			system.AddEmitter(emitter, Time.FromSeconds(emitter.EmitterDuration));
+		}
+
+		public static void DeleteAllEnemies()
+		{
+			foreach (Drawable enemy in enemies)
+			{
+				enemy.Delete();
+			}
+			foreach (EnemyProjectile enemyProjectile in enemyProjectiles)
+			{
+				enemyProjectile.Delete();
+			}
 		}
 
 	}

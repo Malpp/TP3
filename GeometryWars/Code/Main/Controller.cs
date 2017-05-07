@@ -157,6 +157,18 @@ namespace GeometryWars.Code.Main
 
 		}
 
+		public static bool GetBombKey()
+		{
+
+			if (IsConnected)
+			{
+				return Joystick.IsButtonPressed(selectedController, 0);
+			}
+
+			return false;
+
+		}
+
 		public static void Update()
 		{
 

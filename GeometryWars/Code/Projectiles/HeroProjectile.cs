@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GeometryWars.Code.Emmiters;
+using SFML.Graphics;
 using SFML.System;
 
 namespace GeometryWars.Code.Projectiles
@@ -11,8 +12,11 @@ namespace GeometryWars.Code.Projectiles
 	class HeroProjectile : Projectile
 	{
 
+		private static Texture projectileTexture = new Texture("Assets/Textures/heroProjectile.png");
+		private static Color color = new Color(255,216,0);
+
 		public HeroProjectile(Vector2f pos, float angle)
-			: base(pos, angle)
+			: base(pos, angle, projectileTexture, color)
 		{
 			
 
@@ -32,8 +36,6 @@ namespace GeometryWars.Code.Projectiles
 
 		protected override void HandleEdge()
 		{
-
-			EntityManager.AddEmitter(new ProjectileExplosionEmitter(Pos, 1));
 
 			base.HandleEdge();
 		}

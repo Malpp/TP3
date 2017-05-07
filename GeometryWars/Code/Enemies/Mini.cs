@@ -13,7 +13,7 @@ namespace GeometryWars.Code.Enemies
 
 		static Texture miniSniperTexture = new Texture("Assets/Textures/mini.png");
 		private const float miniSpeed = 150f;
-		private const float miniAngleSpeed = 200f;
+		private const float miniAngleSpeed = 120f;
 
 		private const float fireSpeed = 2f;
 		private float fireDelta;

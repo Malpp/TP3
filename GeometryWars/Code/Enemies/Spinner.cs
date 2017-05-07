@@ -12,8 +12,9 @@ namespace GeometryWars.Code.Enemies
 	{
 
 		private static Texture spinnerTexture = new Texture("Assets/Textures/spinner.png");
-		private const float spinnerSpeed = 200f;
-		private const float spinnerAngleSpeed = 200f;
+		private const float spinnerSpeed = 400f;
+		private const float spinnerSpeedSpeedUpgrade = 50f;
+		private const float spinnerAngleSpeed = 400f;
 		private float spinnerRotation;
 		private const float spinnerRotationSpeed = 400f;
 		private Sprite spinnerSprite;
@@ -32,6 +33,8 @@ namespace GeometryWars.Code.Enemies
 
 		public override void Update(float timeDelta, IEnumerable<Drawable> entities = null)
 		{
+
+			MoveSpeed += spinnerSpeedSpeedUpgrade * timeDelta;
 
 			spinnerRotation += spinnerRotationSpeed * timeDelta;
 

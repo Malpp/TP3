@@ -5,26 +5,25 @@ using System.Text;
 using System.Threading.Tasks;
 using GeometryWars.Code.Base;
 using GeometryWars.Code.Particles;
-using NetEXT.Particles;
 using SFML.Graphics;
 using SFML.System;
 
-namespace GeometryWars.Code.Emmiters
+namespace GeometryWars.Code.Emiters
 {
-	class EnemyExplosionEmiter: BaseEmitter
+	class BombEmitter : BaseEmitter
 	{
+		private const float bombEmitterDuration = 0.05f;
+		private const int bombEmitterCount = 100;
 
-		private const float _emitterDuration = 0.2f;
-
-		public EnemyExplosionEmiter(Vector2f pos, int count, Color color)
-			: base(pos, count, _emitterDuration, color)
+		public BombEmitter(Vector2f pos, Color color)
+			: base(pos, bombEmitterCount, bombEmitterDuration, color)
 		{
 			
 		}
 
 		public override BaseParticle ParticleToAdd(Vector2f pos, Color color)
 		{
-			return new EnemyExplosionParticle(pos, color);
+			return new BombParticle(pos, color);
 		}
 	}
 }
