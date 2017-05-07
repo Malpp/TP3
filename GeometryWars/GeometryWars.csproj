@@ -86,8 +86,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Code\Affectors\BounceOffWall.cs" />
-    <Compile Include="Code\Emmiters\EnemyExplosionEmiter.cs" />
-    <Compile Include="Code\Emmiters\ProjectileExplosionEmitter.cs" />
+    <Compile Include="Code\Emiters\EnemyExplosionEmiter.cs" />
+    <Compile Include="Code\Emiters\ProjectileExplosionEmitter.cs" />
     <Compile Include="Code\Enemies\SpawnableEnemies.cs" />
     <Compile Include="Code\Main\Camera.cs" />
     <Compile Include="Code\Main\Controller.cs" />
