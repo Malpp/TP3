@@ -17,9 +17,10 @@ namespace GeometryWars.Code.Enemies
 		private float spinnerRotation;
 		private const float spinnerRotationSpeed = 400f;
 		private Sprite spinnerSprite;
+		private static Color color = new Color(255, 106, 130);
 
 		public Spinner(Vector2f pos, float initAngle)
-			: base(pos, initAngle, spinnerSpeed, spinnerAngleSpeed, spinnerTexture)
+			: base(pos, initAngle, spinnerSpeed, spinnerAngleSpeed, spinnerTexture, color)
 		{
 			
 			sprite.Color = Color.Transparent;

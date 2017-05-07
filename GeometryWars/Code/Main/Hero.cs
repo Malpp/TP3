@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GeometryWars.Code.Main;
+using GeometryWars.Code.Projectiles;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
@@ -16,16 +17,21 @@ namespace GeometryWars.Code
 		private const float heroSpeed = 500f;
 		private const float heroAngleSpeed = 200f;
 		private const int spraySize = 10;
-		private const float fireDelay = 0.01f;
+		private const float fireDelay = 0.05f;
 		private float fireDelta = 0;
 		private bool canFire = true;
 		private static Hero hero;
+
+		public static float Speed
+		{
+			get { return heroSpeed; }
+		}
 
 		public static Hero GetInstance()
 		{
 			
 			if(hero == null)
-				hero = new Hero(new Vector2f(Game.GAME_WIDTH * 0.5f, Game.GAME_HEIGHT * 0.5f), 0);
+				hero = new Hero(new Vector2f(Game.GAME_X_LIMIT * 0.5f, Game.GAME_Y_LIMIT * 0.5f), 0);
 			return hero;
 
 		}
@@ -43,13 +49,13 @@ namespace GeometryWars.Code
 			if (Keyboard.IsKeyPressed(Keyboard.Key.Space) && canFire)
 			{
 				canFire = false;
-				EntityManager.AddProjectile(new Projectile(Pos + Common.MovePointByAngle(heroTexture.Size.X * 0.3f, Angle), Angle + Game.rnd.Next(-spraySize, spraySize)));
+				EntityManager.AddProjectile(new HeroProjectile(Pos + Common.MovePointByAngle(heroTexture.Size.X * 0.3f, Angle), Angle + Game.rnd.Next(-spraySize, spraySize)));
 			}
 			else if(canFire && Controller.FireIsNotCentered)
 			{
 				float fireAngle = Common.AngleBetweenTwoPoints(new Vector2f(), Controller.GetShootAxis());
 				canFire = false;
-				EntityManager.AddProjectile(new Projectile(Pos + Common.MovePointByAngle(heroTexture.Size.X * 0.3f, fireAngle), fireAngle + Game.rnd.Next(-spraySize, spraySize)));
+				EntityManager.AddProjectile(new HeroProjectile(Pos + Common.MovePointByAngle(heroTexture.Size.X * 0.3f, fireAngle), fireAngle + Game.rnd.Next(-spraySize, spraySize)));
 			}
 
 			if(!canFire)

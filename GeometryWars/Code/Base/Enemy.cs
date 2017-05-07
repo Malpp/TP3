@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GeometryWars.Code.Emmiters;
 using SFML.Graphics;
 using SFML.System;
 
@@ -12,6 +13,7 @@ namespace GeometryWars.Code
 	{
 		private float moveSpeed;
 		private float angleSpeed;
+		private Color color;
 
 		public float MoveSpeed
 		{
@@ -30,18 +32,27 @@ namespace GeometryWars.Code
 		//	get { return }
 		//}
 
-		protected Enemy(Vector2f pos, float initAngle, float moveSpeed, float angleSpeed, Texture texture)
+		protected Enemy(Vector2f pos, float initAngle, float moveSpeed, float angleSpeed, Texture texture, Color mainColor)
 			: base(pos, initAngle, texture)
 		{
 
 			this.moveSpeed = moveSpeed;
 			this.angleSpeed = angleSpeed;
+			color = mainColor;
 
 		}
 
 		protected override void HandleCollision(Drawable entity)
 		{
+			
+		}
 
+		public override void Delete()
+		{
+
+			EntityManager.AddEmitter(new EnemyExplosionEmiter(Pos, 1, color));
+
+			base.Delete();
 		}
 
 		protected override Vector2f GetNextMove(float timeDelta)

@@ -25,7 +25,7 @@ namespace GeometryWars.Code
 		public float Angle
 		{
 			get { return angle; }
-			protected set { angle = value; }
+			protected set { angle = value % 360; }
 		}
 
 		public Vector2f LastPos
@@ -104,6 +104,22 @@ namespace GeometryWars.Code
 				return true;
 
 			return false;
+
+		}
+
+		protected float CorrectAngle(float _angle)
+		{
+			float correctedAngle = 360 - Math.Abs(_angle);
+
+			if (_angle < 0)
+				correctedAngle = 360 - correctedAngle;
+
+			if (correctedAngle < 180)
+				correctedAngle = -correctedAngle;
+			else
+				correctedAngle = 360 - correctedAngle;
+
+			return correctedAngle;
 
 		}
 

@@ -18,7 +18,7 @@ namespace GeometryWars.Code.Main
 	static class Controller
 	{
 
-		public const int deadzone = 10;
+		public const int deadzone = 3;
 
 		private static uint selectedController = 1000;
 		private static int controllerId = -1;

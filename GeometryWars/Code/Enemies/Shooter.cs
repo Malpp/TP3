@@ -18,9 +18,10 @@ namespace GeometryWars.Code.Enemies
 		private float fireDelta = 0;
 		private bool canFire = false;
 		private bool correctAngle = false;
+		private static Color color = new Color(255, 244, 112);
 
 		public Shooter(Vector2f pos, float initAngle)
-			: base(pos, initAngle, shooterSpeed, shooterAngleSpeed, shooterTexture)
+			: base(pos, initAngle, shooterSpeed, shooterAngleSpeed, shooterTexture, color)
 		{
 
 		}
@@ -47,10 +48,8 @@ namespace GeometryWars.Code.Enemies
 
 		public override void Update(float timeDelta, IEnumerable<Drawable> entities = null)
 		{
-
-			//Console.WriteLine("{0} {1}",Common.AngleBetweenTwoPoints(Pos, Hero.GetInstance().Pos), Angle % 360);
-
-			if (Math.Abs( Common.AngleBetweenTwoPoints(Pos, Hero.GetInstance().Pos) - Angle % 360) < 1f)
+			 
+			if (Math.Abs( Common.AngleBetweenTwoPoints(Pos, Hero.GetInstance().Pos) - CorrectAngle(Angle)) < 1f)
 				correctAngle = true;
 			else
 				correctAngle = false;

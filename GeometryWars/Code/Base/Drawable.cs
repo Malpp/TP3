@@ -38,7 +38,7 @@ namespace GeometryWars.Code
 
 		}
 
-		public void Delete()
+		public virtual void Delete()
 		{
 			toDelete = true;
 		}

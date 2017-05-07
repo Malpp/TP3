@@ -52,6 +52,14 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NetEXT, Version=1.8.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ExtLibs\NetEXT.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ExtLibs\OpenTK.dll</HintPath>
+    </Reference>
     <Reference Include="sfmlnet-audio-2, Version=2.2.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>ExtLibs\sfmlnet-audio-2.dll</HintPath>
@@ -77,9 +85,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Code\Affectors\BounceOffWall.cs" />
+    <Compile Include="Code\Emmiters\EnemyExplosionEmiter.cs" />
+    <Compile Include="Code\Emmiters\ProjectileExplosionEmitter.cs" />
+    <Compile Include="Code\Enemies\SpawnableEnemies.cs" />
     <Compile Include="Code\Main\Camera.cs" />
     <Compile Include="Code\Main\Controller.cs" />
-    <Compile Include="Code\Other\BaseEntity.cs" />
+    <Compile Include="Code\Main\Star.cs" />
     <Compile Include="Code\Base\Drawable.cs" />
     <Compile Include="Code\Base\FollowerEnemy.cs" />
     <Compile Include="Code\Enemies\Mini.cs" />
@@ -87,12 +99,15 @@
     <Compile Include="Code\Enemies\Sniper.cs" />
     <Compile Include="Code\Enemies\Spinner.cs" />
     <Compile Include="Code\Base\Enemy.cs" />
+    <Compile Include="Code\Particles\EnemyExplosionParticle.cs" />
+    <Compile Include="Code\Particles\ProjectileExplosionParticle.cs" />
     <Compile Include="Code\Projectiles\EnemyProjectile.cs" />
     <Compile Include="Code\Main\EntityManager.cs" />
     <Compile Include="Code\Main\Game.cs" />
-    <Compile Include="Code\Hero\Hero.cs" />
+    <Compile Include="Code\Main\Hero.cs" />
     <Compile Include="Code\Base\Movable.cs" />
-    <Compile Include="Code\Projectiles\Projectile.cs" />
+    <Compile Include="Code\Projectiles\HeroProjectile.cs" />
+    <Compile Include="Code\Base\Projectile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Code\Other\Common.cs" />
@@ -101,7 +116,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Particles\particle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\Textures\base.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\heroParticale.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Textures\mini.png">
@@ -134,12 +155,16 @@
     <Content Include="Assets\Textures\spinner.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\Textures\star.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="ExtLibs\csfml-audio-2.dll" />
     <Content Include="ExtLibs\csfml-graphics-2.dll" />
     <Content Include="ExtLibs\csfml-network-2.dll" />
     <Content Include="ExtLibs\csfml-system-2.dll" />
     <Content Include="ExtLibs\csfml-window-2.dll" />
     <Content Include="ExtLibs\libsndfile-1.dll" />
+    <Content Include="ExtLibs\NetEXT.dll" />
     <Content Include="ExtLibs\openal32.dll" />
     <Content Include="ExtLibs\OpenTK.Compatibility.dll" />
     <Content Include="ExtLibs\OpenTK.dll" />

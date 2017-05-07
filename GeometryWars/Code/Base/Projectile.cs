@@ -8,19 +8,20 @@ using SFML.System;
 
 namespace GeometryWars.Code
 {
-	class Projectile : Movable
+	abstract class Projectile : Movable
 	{
 
 		private static Texture projectileTexture = new Texture("Assets/Textures/projectile.png");
-		private const float defaultProjectileSpeed = 1000f;
-		private float projectileSpeed;
+		private static float projectileSpeed = 1000f;
 
+		public static float Speed
+		{
+			get { return projectileSpeed; }
+		}
 
-		public Projectile(Vector2f pos, float angle, float projectileSpeed = defaultProjectileSpeed)
+		public Projectile(Vector2f pos, float angle)
 			: base(pos, angle, projectileTexture)
 		{
-
-			this.projectileSpeed = projectileSpeed;
 
 		}
 
@@ -36,15 +37,5 @@ namespace GeometryWars.Code
 
 		}
 
-		protected override void HandleCollision(Drawable entity)
-		{
-
-			if (!ToDelete)
-			{
-				Delete();
-				entity.Delete();
-			}
-
-		}
 	}
 }

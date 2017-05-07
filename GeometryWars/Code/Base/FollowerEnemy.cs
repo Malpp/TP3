@@ -13,8 +13,8 @@ namespace GeometryWars.Code.Enemies
 
 
 
-		protected FollowerEnemy(Vector2f pos, float initAngle, float moveSpeed, float angleSpeed, Texture texture)
-			: base(pos, initAngle, moveSpeed, angleSpeed, texture)
+		protected FollowerEnemy(Vector2f pos, float initAngle, float moveSpeed, float angleSpeed, Texture texture, Color mainColor)
+			: base(pos, initAngle, moveSpeed, angleSpeed, texture, mainColor)
 		{
 			
 		}

@@ -22,8 +22,10 @@ namespace GeometryWars.Code.Enemies
 		private float fireDelta;
 		private bool canFire;
 
+		private static Color color = new Color(105, 194, 162);
+
 		public Sniper(Vector2f pos)
-			: base(pos, 0, 0, 0, sniperTexture)
+			: base(pos, 0, 0, 0, sniperTexture, color)
 		{
 			
 			sniperTurretSprite = new Sprite(sniperTurreTexture);
@@ -70,7 +72,9 @@ namespace GeometryWars.Code.Enemies
 
 			}
 
-			sniperTurretSprite.Rotation = Common.AngleBetweenTwoPoints(Pos, Hero.GetInstance().Pos);
+			//sniperTurretSprite.Rotation = Common.AngleBetweenTwoPoints(Pos, Hero.GetInstance().Pos);
+
+			sniperTurretSprite.Rotation = EstimateShootingAngle(timeDelta);
 
 			base.Update(timeDelta, entities);
 		}
@@ -84,5 +88,21 @@ namespace GeometryWars.Code.Enemies
 			window.Draw(sniperTurretSprite);
 
 		}
+
+		private float EstimateShootingAngle(float timeDelta)
+		{
+			float framesUntilNormalHit = Common.DistanceBetweenTwoPoints(Pos, Hero.GetInstance().Pos) /
+			                             (Projectile.Speed * timeDelta);
+
+			float heroDirection = Common.AngleBetweenTwoPoints(Hero.GetInstance().Pos, Hero.GetInstance().LastPos);
+
+			float heroSpeed = Common.DistanceBetweenTwoPoints(Hero.GetInstance().Pos, Hero.GetInstance().LastPos);
+
+			Vector2f estimatedPos = Hero.GetInstance().Pos +
+			                        Common.MovePointByAngle(heroSpeed * framesUntilNormalHit, heroDirection + 180);
+
+			return Common.AngleBetweenTwoPoints(Pos, estimatedPos);
+		}
+
 	}
 }

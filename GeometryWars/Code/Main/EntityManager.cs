@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GeometryWars.Code.Affectors;
 using GeometryWars.Code.Enemies;
 using GeometryWars.Code.Main;
+using GeometryWars.Code.Projectiles;
+using NetEXT.Particles;
 using SFML.Graphics;
 using SFML.System;
+using SFML.Window;
 
 namespace GeometryWars.Code
 {
@@ -14,18 +18,46 @@ namespace GeometryWars.Code
 	{
 		private static List<Drawable> enemies;
 		private static List<Drawable> enemiesBuffer;
-		private static List<Projectile> projectiles;
+		private static List<HeroProjectile> heroProjectiles;
 		private static List<EnemyProjectile> enemyProjectiles;
 		private static Hero hero;
+		private static List<Star> stars;
+		private static ParticleSystem system;
+
+		public static int EnemyCount
+		{
+			get { return enemies.Count(x => !(x is Mini)); }
+		}
 
 		static EntityManager()
 		{
 			
 			enemies = new List<Drawable>();
 			enemiesBuffer = new List<Drawable>();
-			projectiles = new List<Projectile>();
+			heroProjectiles = new List<HeroProjectile>();
 			enemyProjectiles = new List<EnemyProjectile>();
 			hero = Hero.GetInstance();
+			stars = new List<Star>();
+			system = new ParticleSystem(Game.ParticleTexture);
+
+			system.AddAffector(new BounceOffWall());
+
+			GenerateStars();
+
+		}
+
+		private static void GenerateStars()
+		{
+
+			for (int i = 0; i < Star.maxStarCount; i++)
+			{
+				float xPos = Game.rnd.Next((int)Star.MaxX.X, (int)Star.MaxX.Y);
+				float yPos = Game.rnd.Next((int)Star.MaxY.X, (int)Star.MaxY.Y);
+				Vector2f randomPos = new Vector2f(xPos, yPos);
+
+				stars.Add(new Star(randomPos));
+
+			}
 
 		}
 
@@ -78,7 +110,7 @@ namespace GeometryWars.Code
 			//Remove all enemies that died
 			enemies.RemoveAll(x => x.ToDelete);
 
-			//Update all enemy projectiles
+			//Update all enemy heroProjectiles
 			foreach (EnemyProjectile enemyProjectile in enemyProjectiles)
 			{
 				enemyProjectile.Update(timeDelta, new[] { hero });
@@ -87,21 +119,47 @@ namespace GeometryWars.Code
 			//Remove all enemy projectile that died
 			enemyProjectiles.RemoveAll(x => x.ToDelete);
 
-			//Update all projectiles
-			foreach (Projectile projectile in projectiles)
+			//Update all heroProjectiles
+			foreach (Projectile projectile in heroProjectiles)
 			{
 				projectile.Update(timeDelta, enemies);
 			}
 
-			//Remove all projectiles that died
-			projectiles.RemoveAll(x => x.ToDelete);
+			//Remove all heroProjectiles that died
+			heroProjectiles.RemoveAll(x => x.ToDelete);
 
 			//Console.WriteLine(enemies.Count);
+
+			//Update stars
+			if (hero.Pos != hero.LastPos)
+			{
+				foreach (Star star in stars)
+				{
+					star.Update(
+						timeDelta, 
+						Common.AngleBetweenTwoPoints(
+							new Vector2f(), 
+							hero.Pos - hero.LastPos
+						), 
+						Common.DistanceBetweenTwoPoints(
+							hero.Pos, 
+							hero.LastPos
+						) / (Hero.Speed * timeDelta)
+						);
+				}
+			}
+
+			system.Update(Time.FromSeconds(timeDelta));
 
 		}
 
 		public static void Draw(RenderTarget window)
 		{
+
+			foreach (Star star in stars)
+			{
+				star.Draw(window);
+			}
 
 			foreach (Drawable enemy in enemies)
 			{
@@ -113,25 +171,32 @@ namespace GeometryWars.Code
 				projectile.Draw(window);
 			}
 
-			foreach (Projectile projectile in projectiles)
+			foreach (Projectile projectile in heroProjectiles)
 			{
 				projectile.Draw(window);
 			}
 
 			hero.Draw(window);
 
+			system.Draw(window, new RenderStates(BlendMode.Add));
+
 			Camera.Update(window, hero.Pos);
 
 		}
 
-		public static void AddProjectile(Projectile projectile)
+		public static void AddProjectile(HeroProjectile projectile)
 		{
-			projectiles.Add(projectile);
+			heroProjectiles.Add(projectile);
 		}
 
 		public static void AddEnemyProjectile(EnemyProjectile projectile)
 		{
 			enemyProjectiles.Add(projectile);
+		}
+
+		public static void AddEmitter(EmitterBase emitter)
+		{
+			system.AddEmitter(emitter, Time.FromSeconds(0.1f));
 		}
 
 	}

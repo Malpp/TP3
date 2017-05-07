@@ -10,7 +10,8 @@ using SFML.System;
 using System.Diagnostics;
 using GeometryWars.Code;
 using GeometryWars.Code.Enemies;
-using GeometryWars.Code.Main;
+using NetEXT.MathFunctions;
+using NetEXT.Particles;
 
 namespace GeometryWars
 {
@@ -39,7 +40,11 @@ namespace GeometryWars
 		public static Random rnd = new Random();
 
 		private static Texture borderTexture = new Texture("Assets/Textures/border.png");
+		public static readonly Texture ParticleTexture = new Texture("Assets/Particles/particle.png");
 		private static Sprite borderSprite = new Sprite(borderTexture);
+
+		private const float SpawnRadius = 200f;
+		private float currentMaxEnemies;
 
 		public const int BORDER_SIZE = 5;
 
@@ -58,8 +63,6 @@ namespace GeometryWars
 			get { return (Vector2f)borderTexture.Size; }
 		}
 
-		private View camera;
-
 		/// <summary>
 		/// Constructor of the window
 		/// </summary>
@@ -69,10 +72,9 @@ namespace GeometryWars
 		/// <param name="style">Style of the window</param>
 		public Game(uint windowHeight = GAME_HEIGHT, uint windowWidth = GAME_WIDTH, string title = "SFML APP", Styles style = Styles.Close)
 		{
-
 			window = new RenderWindow(new VideoMode(windowWidth, windowHeight), title, style);
 
-			//window.SetFramerateLimit(240);
+			window.SetFramerateLimit(240);
 
 			//Add the Closed function to the window
 			window.Closed += window_Closed;
@@ -87,6 +89,8 @@ namespace GeometryWars
 		{
 
 			window.SetVisible(true);
+
+			window.SetActive();
 
 			InitGame();
 
@@ -128,13 +132,8 @@ namespace GeometryWars
 		void InitGame()
 		{
 
-			EntityManager.AddEnemy(new Shooter(new Vector2f(100, 100), 0));
-
-			//entities.Add(new MiniSniper(100, 100, 180));
-
-			camera = new View(new Vector2f(GAME_WIDTH * 0.5f, GAME_HEIGHT * 0.5f), new Vector2f(1100, 1100));
-
-			window.SetView(camera);
+			currentMaxEnemies = 5;
+			//EntityManager.AddEnemy(new Sniper(new Vector2f(300f,300f)));
 
 		}
 
@@ -178,15 +177,52 @@ namespace GeometryWars
 			{
 				for (int i = 0; i < 500; i++)
 				{
-					EntityManager.AddEnemy(new Shooter(new Vector2f(100 + i, 100), -90));
+					//EntityManager.AddEnemy(new Shooter(new Vector2f(100 + i, 100), -90));
 				}
 			}
 
 			EntityManager.Update(gameTime.AsSeconds());
 
-			foreach (Joystick.Axis axis in Enum.GetValues(typeof(Joystick.Axis)))
+			if (EntityManager.EnemyCount < currentMaxEnemies)
 			{
-				//Console.Write(axis + ": " + Joystick.GetAxisPosition(0,axis) + " ");
+
+				float xSpawnPos;
+				float ySpawnPos;
+
+				Vector2f heroPos = Hero.GetInstance().Pos;
+
+				do
+				{
+					xSpawnPos = rnd.Next(0, (int)GAME_X_LIMIT);
+				} while (!(xSpawnPos + SpawnRadius < heroPos.X) &&
+				         !(xSpawnPos - SpawnRadius > heroPos.X));
+
+				do
+				{
+					ySpawnPos = rnd.Next(0, (int)GAME_X_LIMIT);
+				} while (!(ySpawnPos + SpawnRadius < heroPos.Y) &&
+				         !(ySpawnPos - SpawnRadius > heroPos.Y));
+
+				Vector2f spawnPos = new Vector2f(xSpawnPos, ySpawnPos);
+				float spawnAngle = rnd.Next(0, 360);
+
+				Array values = Enum.GetValues(typeof(SpawnableEnemies));
+
+				switch ((SpawnableEnemies)values.GetValue(rnd.Next(values.Length)))
+				{
+					
+					case SpawnableEnemies.Shooter:
+						EntityManager.AddEnemy(new Shooter(spawnPos, spawnAngle));
+						break;
+					case SpawnableEnemies.Sniper:
+						EntityManager.AddEnemy(new Sniper(spawnPos));
+						break;
+					case SpawnableEnemies.Spinner:
+						EntityManager.AddEnemy(new Spinner(spawnPos, spawnAngle));
+						break;
+
+				}
+
 			}
 
 		}

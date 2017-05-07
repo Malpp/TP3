@@ -19,13 +19,15 @@ namespace GeometryWars.Code.Enemies
 		private float fireDelta;
 		private bool canFire;
 
+		private static Color color = Color.Red;
+
 		public static float Size
 		{
 			get { return miniSniperTexture.Size.X; }
 		}
 
 		public Mini(Vector2f pos, float initAngle)
-			: base(pos, initAngle, miniSpeed, miniAngleSpeed, miniSniperTexture)
+			: base(pos, initAngle, miniSpeed, miniAngleSpeed, miniSniperTexture, color)
 		{
 
 		}
@@ -41,7 +43,7 @@ namespace GeometryWars.Code.Enemies
 			if (canFire)
 			{
 
-				if (Common.AngleBetweenTwoPoints(Pos, Hero.GetInstance().Pos) - Angle < 1f)
+				if (Math.Abs(Common.AngleBetweenTwoPoints(Pos, Hero.GetInstance().Pos) - CorrectAngle(Angle)) < 1f)
 				{
 
 					canFire = false;
