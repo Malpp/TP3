@@ -12,8 +12,8 @@ namespace GeometryWars.Code.Emiters
 {
 	class BombEmitter : BaseEmitter
 	{
-		private const float bombEmitterDuration = 0.2f;
-		private const int bombEmitterCount = 100;
+		private const float bombEmitterDuration = 0.075f;
+		private const int bombEmitterCount = 300;
 
 		public BombEmitter(Vector2f pos, Color color)
 			: base(pos, bombEmitterCount, bombEmitterDuration, color)

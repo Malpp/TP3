@@ -35,8 +35,8 @@ namespace GeometryWars
 		int fps = 0;
 
 		//Height and width of the game window
-		public const int GAME_WIDTH = 1920;
-		public const int GAME_HEIGHT = 1080;
+		public const int GAME_WIDTH = 1240;
+		public const int GAME_HEIGHT = 720;
 
 		#endregion
 
@@ -90,7 +90,7 @@ namespace GeometryWars
 		{
 			window = new RenderWindow(new VideoMode(windowWidth, windowHeight), title, style);
 
-			window.SetFramerateLimit(240);
+			//window.SetFramerateLimit(240);
             window.SetMouseCursorVisible(false);
 
 			//Add the Closed function to the window
@@ -153,15 +153,6 @@ namespace GeometryWars
 			music.Play();
 
 			music.Volume = 20;
-
-			myShader = new Shader(null, "Assets/Shaders/pixelate.frag");
-			myShader.SetParameter("texture", Shader.CurrentTexture);
-			myShader.SetParameter("pixel_threshold", 200);
-
-			horiShader.SetParameter("sourceTexture", Shader.CurrentTexture);
-			horiShader.SetParameter("sigma", 0.5f);
-			horiShader.SetParameter("width", renderTexture.Size.X);
-			horiShader.SetParameter("glowMultiplier", 1.5f);
 
 			currentMaxEnemies = 3;
 			//EntityManager.AddEnemy(new Sniper(new Vector2f(300f,300f)));
@@ -298,9 +289,10 @@ namespace GeometryWars
 
             window.Draw(vertical, new RenderStates(BlendMode.Add));
 
+            //renderTextureSprite.Texture = renderTexture.Texture;
+            //window.Draw(renderTextureSprite, new RenderStates(BlendMode.Add));
 
-
-			window.Display();
+            window.Display();
 
 		}
 

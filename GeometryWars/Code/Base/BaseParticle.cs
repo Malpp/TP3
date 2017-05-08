@@ -18,7 +18,7 @@ namespace GeometryWars.Code.Base
 
 			float angle = Game.rnd.Next(0, 360);
 
-			Rotation = angle;
+            Rotation = angle;
 			Position = pos;
 			Color = color;
 			Velocity = Common.MovePointByAngle(speed, angle);

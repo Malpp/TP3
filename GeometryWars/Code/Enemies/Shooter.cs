@@ -13,7 +13,7 @@ namespace GeometryWars.Code.Enemies
 
 		private static Texture shooterTexture = new Texture("Assets/Textures/shooter.png");
 		private const float shooterSpeed = 300f;
-		private const float shooterAngleSpeed = 200f;
+		private const float shooterAngleSpeed = 125f;
 		private const float fireSpeed = 0.3f;
 		private float fireDelta = 0;
 		private bool canFire = false;

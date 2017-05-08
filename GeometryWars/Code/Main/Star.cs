@@ -15,16 +15,10 @@ namespace GeometryWars.Code.Main
 		private static Texture starTexture = new Texture("Assets/Textures/star.png");
 		private Vector2f pos;
 		private float starSpeed;
-
-		public static Vector2f MaxX
-		{
-			get { return new Vector2f(0 - Camera.MaxCameraMovement.X, Game.GAME_X_LIMIT + Camera.MaxCameraMovement.X); }
-		}
-
-		public static Vector2f MaxY
-		{
-			get { return new Vector2f(0 - Camera.MaxCameraMovement.Y, Game.GAME_Y_LIMIT + Camera.MaxCameraMovement.Y); }
-		}
+        public static readonly Vector2f MaxX = new Vector2f(0 - Camera.MaxCameraMovement.X, Game.GAME_X_LIMIT + Camera.MaxCameraMovement.X);
+		public static  readonly Vector2f MaxY =  new Vector2f(0 - Camera.MaxCameraMovement.Y, Game.GAME_Y_LIMIT + Camera.MaxCameraMovement.Y);
+	    private static float angle;
+	    private static float shipSpeed;
 
 		public Star(Vector2f pos)
 			: base(pos, 0, starTexture)
@@ -36,18 +30,6 @@ namespace GeometryWars.Code.Main
 
 		public void Update(float timeDelta)
 		{
-
-			Hero hero = Hero.GetInstance();
-
-			float angle = Common.AngleBetweenTwoPoints(
-				new Vector2f(),
-				hero.Pos - hero.LastPos
-			);
-			float shipSpeed = Common.DistanceBetweenTwoPoints(
-				                  hero.Pos,
-				                  hero.LastPos
-			                  ) / (Hero.Speed * timeDelta);
-						
 
 			pos += Common.MovePointByAngle(starSpeed * shipSpeed, angle + 180) * timeDelta;
 
@@ -71,6 +53,21 @@ namespace GeometryWars.Code.Main
 			sprite.Position = pos;
 
 		}
+
+	    public static void PreUpdate(float timeDelta)
+	    {
+
+            Hero hero = Hero.GetInstance();
+
+            angle = Common.AngleBetweenTwoPoints(
+                new Vector2f(),
+                hero.Pos - hero.LastPos
+            );
+            shipSpeed = Common.DistanceBetweenTwoPoints(
+                                  hero.Pos,
+                                  hero.LastPos
+                              ) / (Hero.Speed * timeDelta);
+        }
 
 	}
 }

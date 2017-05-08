@@ -47,8 +47,15 @@ namespace GeometryWars.Code.Enemies
 			//{
 			//	angle = angleBetweenPoints;
 			//}
-			//else 
-			if (newDistance < distance)
+			//else
+		    float angleBetweenHero = Common.AngleBetweenTwoPoints(Pos, Hero.GetInstance().Pos);
+
+            if (Math.Abs(angleBetweenHero - CorrectAngle(Angle)) < AngleSpeed * timeDelta)
+		    {
+		        Angle = angleBetweenHero;
+
+		    }
+			else if (newDistance < distance)
 			{
 				Angle += AngleSpeed * timeDelta;
 			}

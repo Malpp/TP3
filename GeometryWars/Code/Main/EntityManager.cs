@@ -17,8 +17,8 @@ namespace GeometryWars.Code
 {
 	static class EntityManager
 	{
-		private static List<Drawable> enemies;
-		private static List<Drawable> enemiesBuffer;
+		private static List<Movable> enemies;
+		private static List<Movable> enemiesBuffer;
 		private static List<HeroProjectile> heroProjectiles;
 		private static List<EnemyProjectile> enemyProjectiles;
 		private static Hero hero;
@@ -27,14 +27,23 @@ namespace GeometryWars.Code
 
 		public static int EnemyCount
 		{
-			get { return enemies.Count(x => !(x is Mini)); }
+		    get
+		    {
+		        int count=0;
+		        foreach (Movable movable in enemies)
+		        {
+		            if (!(movable is Mini))
+		                count++;
+		        }
+		        return count;
+		    }
 		}
 
 		static EntityManager()
 		{
 			
-			enemies = new List<Drawable>();
-			enemiesBuffer = new List<Drawable>();
+			enemies = new List<Movable>();
+			enemiesBuffer = new List<Movable>();
 			heroProjectiles = new List<HeroProjectile>();
 			enemyProjectiles = new List<EnemyProjectile>();
 			hero = Hero.GetInstance();
@@ -62,7 +71,7 @@ namespace GeometryWars.Code
 
 		}
 
-		public static void AddEnemy(Drawable enemy)
+		public static void AddEnemy(Movable enemy)
 		{
 			
 			enemies.Add(enemy);
@@ -78,12 +87,9 @@ namespace GeometryWars.Code
 			hero.Update(timeDelta, enemies);
 
 			//Updates all enemies
-			foreach (Drawable enemy in enemies)
+			foreach (Movable enemy in enemies)
 			{
-				if (enemy is Movable)
-				{
-					(enemy as Movable).Update(timeDelta, new[] { hero });
-				}
+					enemy.Update(timeDelta, new[] { hero });
 			}
 
 			//Add new enemies
@@ -103,7 +109,7 @@ namespace GeometryWars.Code
 				}
 			}
 
-			foreach (Drawable enemy in enemiesBuffer)
+			foreach (Movable enemy in enemiesBuffer)
 			{
 				enemies.Add(enemy);
 			}
@@ -134,6 +140,7 @@ namespace GeometryWars.Code
 			//Update stars
 			if (hero.Pos != hero.LastPos)
 			{
+                Star.PreUpdate(timeDelta);
 				foreach (Star star in stars)
 				{
 					star.Update(timeDelta);
@@ -156,7 +163,7 @@ namespace GeometryWars.Code
 				star.Draw(window);
 			}
 
-			foreach (Drawable enemy in enemies)
+			foreach (Movable enemy in enemies)
 			{
 				enemy.Draw(window);
 			}
@@ -196,7 +203,7 @@ namespace GeometryWars.Code
 
 		public static void DeleteAllEnemies()
 		{
-			foreach (Drawable enemy in enemies)
+			foreach (Movable enemy in enemies)
 			{
 				enemy.Delete();
 			}
