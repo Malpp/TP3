@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GeometryWars.Code.Main;
 using GeometryWars.Code.Projectiles;
+using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
@@ -13,6 +14,7 @@ namespace GeometryWars.Code
 {
 	class Hero : Movable
 	{
+		static SoundBuffer fireSound = new SoundBuffer("Assets/SFX/Fire_homing.ogg");
 		private static Texture heroTexture = new Texture("Assets/Textures/hero.png");
 		private const float heroSpeed = 500f;
 		private const float heroAngleSpeed = 200f;
@@ -55,12 +57,14 @@ namespace GeometryWars.Code
 			{
 				canFire = false;
 				EntityManager.AddProjectile(new HeroProjectile(Pos + Common.MovePointByAngle(heroTexture.Size.X * 0.3f, Angle), Angle + Game.rnd.Next(-spraySize, spraySize)));
+				Game.PlaySound(fireSound);
 			}
 			else if(canFire && Controller.FireIsNotCentered)
 			{
 				float fireAngle = Common.AngleBetweenTwoPoints(new Vector2f(), Controller.GetShootAxis());
 				canFire = false;
 				EntityManager.AddProjectile(new HeroProjectile(Pos + Common.MovePointByAngle(heroTexture.Size.X * 0.3f, fireAngle), fireAngle + Game.rnd.Next(-spraySize, spraySize)));
+				Game.PlaySound(fireSound);
 			}
 
 			if(!canFire)

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GeometryWars.Code.Emmiters;
+using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
 
@@ -14,6 +15,7 @@ namespace GeometryWars.Code
 		private float moveSpeed;
 		private float angleSpeed;
 		private Color color;
+		SoundBuffer dieingSound = new SoundBuffer("Assets/SFX/Enemy_explode.wav");
 
 		public float MoveSpeed
 		{
@@ -51,6 +53,8 @@ namespace GeometryWars.Code
 		{
 
 			EntityManager.AddEmitter(new EnemyExplosionEmiter(Pos, 5, color));
+
+			Game.PlaySound(dieingSound);
 
 			base.Delete();
 		}

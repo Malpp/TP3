@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GeometryWars.Code.Emmiters;
+using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
 
@@ -14,6 +15,7 @@ namespace GeometryWars.Code
 
 		private static float projectileSpeed = 1000f;
 		private Color color;
+		static SoundBuffer hitWallSound = new SoundBuffer("Assets/SFX/Projectile_hit_wall.wav");
 
 		public static float Speed
 		{
@@ -33,6 +35,8 @@ namespace GeometryWars.Code
 
 		protected override void HandleEdge()
 		{
+
+			Game.PlaySound(hitWallSound);
 
 			Delete();
 

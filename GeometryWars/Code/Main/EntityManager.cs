@@ -142,6 +142,8 @@ namespace GeometryWars.Code
 
 			Bomb.Update(timeDelta);
 
+			SoundManager.Update();
+
 			system.Update(Time.FromSeconds(timeDelta));
 
 		}

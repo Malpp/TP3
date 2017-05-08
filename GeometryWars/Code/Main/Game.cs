@@ -13,6 +13,7 @@ using GeometryWars.Code.Enemies;
 using GeometryWars.Code.Main;
 using NetEXT.MathFunctions;
 using NetEXT.Particles;
+using SFML.Audio;
 
 namespace GeometryWars
 {
@@ -47,6 +48,9 @@ namespace GeometryWars
 		Sprite renderTextureSprite = new Sprite();
 		Shader horiShader = new Shader(null, "Assets/Shaders/hori.frag");
 		Shader myShader;
+		private static Sound soundBuffer = new Sound();
+
+		private Music music = new Music("Assets/Music/theme.ogg");
 
 		private const float SpawnRadius = 200f;
 		private float currentMaxEnemies;
@@ -137,6 +141,11 @@ namespace GeometryWars
 		void InitGame()
 		{
 
+			music.Loop = true;
+			music.Play();
+
+			music.Volume = 20;
+
 			myShader = new Shader(null, "Assets/Shaders/pixelate.frag");
 			myShader.SetParameter("texture", Shader.CurrentTexture);
 			myShader.SetParameter("pixel_threshold", 200);
@@ -146,7 +155,7 @@ namespace GeometryWars
 			horiShader.SetParameter("width", renderTexture.Size.X);
 			horiShader.SetParameter("glowMultiplier", 1.5f);
 
-			currentMaxEnemies = 5;
+			currentMaxEnemies = 3;
 			//EntityManager.AddEnemy(new Sniper(new Vector2f(300f,300f)));
 
 		}
@@ -262,6 +271,11 @@ namespace GeometryWars
 			
 			window.Display();
 
+		}
+
+		public static void PlaySound(SoundBuffer sound)
+		{
+			SoundManager.AddSound(sound);
 		}
 
 	}
