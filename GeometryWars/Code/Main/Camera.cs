@@ -10,8 +10,7 @@ namespace GeometryWars.Code.Main
 {
 	static class Camera
 	{
-		private const float cameraSize = 1200;
-		static View camara = new View(new Vector2f(), new Vector2f(cameraSize, cameraSize));
+		static View camara = new View(new Vector2f(), new Vector2f(1920, 1080));
 		static Vector2f center = Game.GAME_SIZE * 0.5f;
 
 		public static Vector2f MaxCameraMovement

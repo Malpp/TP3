@@ -16,6 +16,7 @@ namespace GeometryWars.Code
 		private static float projectileSpeed = 1000f;
 		private Color color;
 		static SoundBuffer hitWallSound = new SoundBuffer("Assets/SFX/Projectile_hit_wall.wav");
+	    private float lastTimeDelta;
 
 		public static float Speed
 		{
@@ -30,6 +31,7 @@ namespace GeometryWars.Code
 
 		protected override Vector2f GetNextMove(float timeDelta)
 		{
+		    lastTimeDelta = timeDelta;
 			return Common.MovePointByAngle(projectileSpeed, Angle);
 		}
 
@@ -39,6 +41,7 @@ namespace GeometryWars.Code
 			Game.PlaySound(hitWallSound);
 
 			Delete();
+            
 
 		}
 

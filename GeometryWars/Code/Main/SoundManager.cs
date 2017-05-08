@@ -9,7 +9,7 @@ namespace GeometryWars.Code.Main
 {
 	static class SoundManager
 	{
-		private static Queue<Sound> sounds = new Queue<Sound>();
+		private static Queue<Sound> sounds = new Queue<Sound>(1000);
 		private static float volume = 10;
 
 		public static void AddSound(SoundBuffer sound)

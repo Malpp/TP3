@@ -9,6 +9,7 @@ using SFML.Window;
 using SFML.System;
 using System.Diagnostics;
 using GeometryWars.Code;
+using GeometryWars.Code.Effects;
 using GeometryWars.Code.Enemies;
 using GeometryWars.Code.Main;
 using NetEXT.MathFunctions;
@@ -34,8 +35,8 @@ namespace GeometryWars
 		int fps = 0;
 
 		//Height and width of the game window
-		public const int GAME_HEIGHT = 700;
-		public const int GAME_WIDTH = 700;
+		public const int GAME_WIDTH = 1920;
+		public const int GAME_HEIGHT = 1080;
 
 		#endregion
 
@@ -49,6 +50,12 @@ namespace GeometryWars
 		Shader horiShader = new Shader(null, "Assets/Shaders/hori.frag");
 		Shader myShader;
 		private static Sound soundBuffer = new Sound();
+	    private Pixelate pixelate = new Pixelate();
+        HorizontalPass horizontal = new HorizontalPass();
+        VerticalPass vertical = new VerticalPass();
+        RenderTexture secondPass = new RenderTexture(GAME_WIDTH, GAME_HEIGHT);
+	    private float sigma = 3.5f;
+	    private float glow = 2f;
 
 		private Music music = new Music("Assets/Music/theme.ogg");
 
@@ -79,11 +86,12 @@ namespace GeometryWars
 		/// <param name="windowWidth">Width of the window</param>
 		/// <param name="title">Title of the window</param>
 		/// <param name="style">Style of the window</param>
-		public Game(uint windowHeight = GAME_HEIGHT, uint windowWidth = GAME_WIDTH, string title = "SFML APP", Styles style = Styles.Close)
+		public Game(uint windowHeight = GAME_HEIGHT, uint windowWidth = GAME_WIDTH, string title = "SFML APP", Styles style = Styles.None)
 		{
 			window = new RenderWindow(new VideoMode(windowWidth, windowHeight), title, style);
 
 			window.SetFramerateLimit(240);
+            window.SetMouseCursorVisible(false);
 
 			//Add the Closed function to the window
 			window.Closed += window_Closed;
@@ -204,7 +212,20 @@ namespace GeometryWars
 				}
 			}
 
-			EntityManager.Update(gameTime.AsSeconds());
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Up))
+                sigma += 0.01f;
+
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Down))
+                sigma -= 0.01f;
+
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Left))
+                glow -= 0.01f;
+
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Right))
+                glow += 0.01f;
+
+
+            EntityManager.Update(gameTime.AsSeconds());
 
 			if (!Bomb.CanEnemiesSpawn)
 			{
@@ -262,13 +283,23 @@ namespace GeometryWars
 
 			renderTexture.Display();
 
-			renderTextureSprite.Texture = renderTexture.Texture;
+		    renderTextureSprite.Texture = renderTexture.Texture;
+            window.Draw(renderTextureSprite, new RenderStates(BlendMode.Add));
+            
+            horizontal.Update(renderTexture.Texture, sigma, glow);
 
-			RenderStates states = new RenderStates();
-			states.Shader = myShader;
+            secondPass.Clear();
 
-			window.Draw(renderTextureSprite);
+            secondPass.Draw(horizontal, new RenderStates(BlendMode.Add));
 			
+            secondPass.Display();
+
+            vertical.Update(secondPass.Texture, sigma, glow);
+
+            window.Draw(vertical, new RenderStates(BlendMode.Add));
+
+
+
 			window.Display();
 
 		}

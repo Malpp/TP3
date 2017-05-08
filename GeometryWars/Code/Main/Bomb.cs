@@ -18,7 +18,7 @@ namespace GeometryWars.Code.Main
 		private static bool canFire = true;
 		private static float cooldownTime;
 		private static bool enemiesCanSpawn = true;
-		private const float bombTime = 1f;
+		private const float bombTime = 2f;
 		private static float enemiesRespawnTimeDelta;
 		static SoundBuffer bombSound = new SoundBuffer("Assets/SFX/Gravity_well_die.ogg");
 

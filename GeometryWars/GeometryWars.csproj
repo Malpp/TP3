@@ -88,6 +88,10 @@
     <Compile Include="Code\Affectors\BounceOffWall.cs" />
     <Compile Include="Code\Base\BaseEmitter.cs" />
     <Compile Include="Code\Base\BaseParticle.cs" />
+    <Compile Include="Code\Base\Effect.cs" />
+    <Compile Include="Code\Effects\HorizontalPass.cs" />
+    <Compile Include="Code\Effects\Pixelate.cs" />
+    <Compile Include="Code\Effects\VerticalPass.cs" />
     <Compile Include="Code\Emiters\BombEmitter.cs" />
     <Compile Include="Code\Emiters\EnemyExplosionEmiter.cs" />
     <Compile Include="Code\Emiters\ProjectileExplosionEmitter.cs" />
@@ -136,6 +140,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Assets\Shaders\pixelate.frag">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\Shaders\vert.frag">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

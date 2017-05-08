@@ -16,9 +16,22 @@ namespace GeometryWars.Code.Affectors
 		{
 
 			particle.Velocity = new Vector2f(
-				(particle.Position.X < 0 || particle.Position.X > Game.GAME_X_LIMIT) ? -particle.Velocity.X : particle.Velocity.X,
-				(particle.Position.Y < 0 || particle.Position.Y > Game.GAME_Y_LIMIT) ? -particle.Velocity.Y : particle.Velocity.Y
+				(particle.Position.X < Game.ParticleTexture.Size.X + Game.BORDER_SIZE || particle.Position.X > Game.GAME_X_LIMIT + Game.ParticleTexture.Size.X + Game.BORDER_SIZE) ? -particle.Velocity.X : particle.Velocity.X,
+				(particle.Position.Y < Game.ParticleTexture.Size.X + Game.BORDER_SIZE || particle.Position.Y > Game.GAME_Y_LIMIT + Game.ParticleTexture.Size.X + Game.BORDER_SIZE) ? -particle.Velocity.Y : particle.Velocity.Y
 				);
+
+            particle.Position = new Vector2f(
+                Math.Max(
+                    Game.ParticleTexture.Size.X + Game.BORDER_SIZE,
+                    Math.Min(
+                        Game.GAME_X_LIMIT - Game.ParticleTexture.Size.X - Game.BORDER_SIZE,
+                        particle.Position.X)),
+                Math.Max(
+                    Game.ParticleTexture.Size.X + Game.BORDER_SIZE,
+                    Math.Min(
+                        Game.GAME_Y_LIMIT - Game.ParticleTexture.Size.X - Game.BORDER_SIZE,
+                        particle.Position.Y))
+                );
 
 			particle.Rotation = Common.AngleBetweenTwoPoints(new Vector2f(), particle.Velocity);
 
