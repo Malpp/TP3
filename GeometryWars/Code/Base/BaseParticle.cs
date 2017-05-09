@@ -25,5 +25,16 @@ namespace GeometryWars.Code.Base
 
 		}
 
+		public BaseParticle(Vector2f pos, Color color, float duration, float speed, float angle)
+			: base(Time.FromSeconds(duration))
+		{
+
+			Rotation = angle;
+			Position = pos;
+			Color = color;
+			Velocity = Common.MovePointByAngle(speed, angle);
+
+		}
+
 	}
 }

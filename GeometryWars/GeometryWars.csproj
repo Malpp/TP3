@@ -11,6 +11,9 @@
     <AssemblyName>SFML.Net Template</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <NuGetPackageImportStamp>d055e012</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -94,6 +97,7 @@
     <Compile Include="Code\Effects\VerticalPass.cs" />
     <Compile Include="Code\Emiters\BombEmitter.cs" />
     <Compile Include="Code\Emiters\EnemyExplosionEmiter.cs" />
+    <Compile Include="Code\Emiters\HeroTrailEmitter.cs" />
     <Compile Include="Code\Emiters\ProjectileExplosionEmitter.cs" />
     <Compile Include="Code\Enemies\SpawnableEnemies.cs" />
     <Compile Include="Code\Main\Bomb.cs" />
@@ -110,6 +114,7 @@
     <Compile Include="Code\Base\Enemy.cs" />
     <Compile Include="Code\Particles\BombParticle.cs" />
     <Compile Include="Code\Particles\EnemyExplosionParticle.cs" />
+    <Compile Include="Code\Particles\HeroTrailParticle.cs" />
     <Compile Include="Code\Particles\ProjectileExplosionParticle.cs" />
     <Compile Include="Code\Projectiles\EnemyProjectile.cs" />
     <Compile Include="Code\Main\EntityManager.cs" />
@@ -276,48 +281,48 @@
     <Content Include="Assets\SFX\Wanderer_spawn.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\Textures\base.png">
+    <EmbeddedResource Include="Assets\Textures\base.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\heroParticale.png">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Textures\heroParticale.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\heroProjectile.png">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Textures\heroProjectile.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\mini.png">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Textures\mini.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\sniper.png">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Textures\sniper.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\border.png">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Textures\border.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\enemyProjectile.png">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Textures\enemyProjectile.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\enemy.png">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Textures\enemy.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\hero.png">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Textures\hero.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\shooter.png">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Textures\shooter.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\sniperCharging.png">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Textures\sniperCharging.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\sniperTurret.png">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Textures\sniperTurret.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\spinner.png">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Textures\spinner.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\star.png">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Textures\star.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </EmbeddedResource>
     <Content Include="ExtLibs\csfml-audio-2.dll" />
     <Content Include="ExtLibs\csfml-graphics-2.dll" />
     <Content Include="ExtLibs\csfml-network-2.dll" />
@@ -338,6 +343,13 @@
   <PropertyGroup>
     <PostBuildEvent>xcopy /y /d  "$(ProjectDir)ExtLibs\*.dll" "$(ProjectDir)$(OutDir)"</PostBuildEvent>
   </PropertyGroup>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

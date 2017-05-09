@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GeometryWars.Code.Emiters;
 using GeometryWars.Code.Main;
 using GeometryWars.Code.Projectiles;
 using SFML.Audio;
@@ -23,10 +24,16 @@ namespace GeometryWars.Code
 		private float fireDelta = 0;
 		private bool canFire = true;
 		private static Hero hero;
+		Vector2f direction = new Vector2f();
 
 		public static float Speed
 		{
 			get { return heroSpeed; }
+		}
+
+		public Vector2f Direction
+		{
+			get { return direction; }
 		}
 
 		public static Hero GetInstance()
@@ -105,6 +112,9 @@ namespace GeometryWars.Code
 						Common.DistanceBetweenTwoPoints(new Vector2f(), Controller.GetMoveAxis() / 100);
 
 			}
+
+			if(pos != new Vector2f())
+				direction = pos;
 
 			return pos;
 		}

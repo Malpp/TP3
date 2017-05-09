@@ -27,12 +27,16 @@ namespace GeometryWars.Code.Base
 		{
 			this.pos = pos;
 			particleCount = count;
-			_emitterDuration = emitterDuration;
+			if(emitterDuration > 0)
+				_emitterDuration = emitterDuration;
 			color = particaleColor;
 		}
 
 		public override void EmitParticles(ParticleSystem ParticleSystem, Time DeltaTime)
 		{
+
+			PreUpdate(DeltaTime.AsSeconds());
+
 			for (int i = 0; i < particleCount; i++)
 			{
 				EmitParticle(ParticleSystem, ParticleToAdd(pos, color));
@@ -40,6 +44,11 @@ namespace GeometryWars.Code.Base
 		}
 
 		public abstract BaseParticle ParticleToAdd(Vector2f pos, Color color);
+
+		protected virtual void PreUpdate(float timeDelta)
+		{
+			
+		}
 
 	}
 }

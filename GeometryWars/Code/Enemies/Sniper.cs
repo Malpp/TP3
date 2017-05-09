@@ -22,7 +22,7 @@ namespace GeometryWars.Code.Enemies
 		private float fireDelta;
 		private bool canFire;
 
-		private static Color color = new Color(105, 194, 162);
+		private static Color color = new Color(0, 234, 27);
 
 		public Sniper(Vector2f pos)
 			: base(pos, 0, 0, 0, sniperTexture, color)
@@ -83,7 +83,7 @@ namespace GeometryWars.Code.Enemies
 		{
 			base.Draw(window);
 
-			window.Draw(sniperChargingSprite);
+			//window.Draw(sniperChargingSprite);
 
 			window.Draw(sniperTurretSprite);
 

@@ -11,8 +11,8 @@ namespace GeometryWars.Code.Affectors
 {
 	class BounceOffWall : IAffector
 	{
-	    private static float xMin = Game.ParticleTexture.Size.X + Game.BORDER_SIZE;
-	    private static float yMin = Game.ParticleTexture.Size.X + Game.BORDER_SIZE;
+	    private static float xMin = Game.BORDER_SIZE;
+	    private static float yMin = Game.BORDER_SIZE;
 
 	    private static float xMax = Game.GAME_X_LIMIT - Game.BORDER_SIZE;
 	    private static float yMax = Game.GAME_Y_LIMIT - Game.BORDER_SIZE;
@@ -54,7 +54,7 @@ namespace GeometryWars.Code.Affectors
 
 		    particle.Velocity *= 0.985f;
 
-			particle.Color = new Color(particle.Color.R, particle.Color.G, particle.Color.B, (byte)(50f + 206f * particle.RemainingRatio));
+			particle.Color = new Color(particle.Color.R, particle.Color.G, particle.Color.B, (byte)(20f + 236f * particle.RemainingRatio));
 
 		}
 

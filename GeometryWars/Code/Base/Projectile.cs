@@ -45,6 +45,21 @@ namespace GeometryWars.Code
 
 		}
 
+		public override void DoCollisions(IEnumerable<Drawable> entities)
+		{
+
+			foreach (Drawable entity in entities)
+			{
+
+				if (!entity.ToDelete && entity.GlobalBounds.Contains(Pos.X, Pos.Y))
+				{
+					HandleCollision(entity);
+				}
+
+			}
+
+		}
+
 		public override void Delete()
 		{
 

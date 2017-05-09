@@ -19,7 +19,7 @@ namespace GeometryWars.Code.Enemies
 		private float fireDelta;
 		private bool canFire;
 
-		private static Color color = Color.Red;
+		private static Color color = new Color(255,106,0);
 
 		public static float Size
 		{

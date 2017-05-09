@@ -18,7 +18,7 @@ namespace GeometryWars.Code.Enemies
 		private float fireDelta = 0;
 		private bool canFire = false;
 		private bool correctAngle = false;
-		private static Color color = new Color(255, 244, 112);
+		private static Color color = new Color(7, 0, 234);
 
 		public Shooter(Vector2f pos, float initAngle)
 			: base(pos, initAngle, shooterSpeed, shooterAngleSpeed, shooterTexture, color)

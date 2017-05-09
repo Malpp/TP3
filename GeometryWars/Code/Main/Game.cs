@@ -8,8 +8,10 @@ using SFML.Graphics;
 using SFML.Window;
 using SFML.System;
 using System.Diagnostics;
+using System.Threading;
 using GeometryWars.Code;
 using GeometryWars.Code.Effects;
+using GeometryWars.Code.Emiters;
 using GeometryWars.Code.Enemies;
 using GeometryWars.Code.Main;
 using NetEXT.MathFunctions;
@@ -35,8 +37,8 @@ namespace GeometryWars
 		int fps = 0;
 
 		//Height and width of the game window
-		public const int GAME_WIDTH = 1240;
-		public const int GAME_HEIGHT = 720;
+		public const int GAME_WIDTH = 1920;
+		public const int GAME_HEIGHT = 1080;
 
 		#endregion
 
@@ -50,12 +52,12 @@ namespace GeometryWars
 		Shader horiShader = new Shader(null, "Assets/Shaders/hori.frag");
 		Shader myShader;
 		private static Sound soundBuffer = new Sound();
-	    private Pixelate pixelate = new Pixelate();
-        HorizontalPass horizontal = new HorizontalPass();
-        VerticalPass vertical = new VerticalPass();
-        RenderTexture secondPass = new RenderTexture(GAME_WIDTH, GAME_HEIGHT);
-	    private float sigma = 3.5f;
-	    private float glow = 2f;
+		private Pixelate pixelate = new Pixelate();
+		HorizontalPass horizontal = new HorizontalPass();
+		VerticalPass vertical = new VerticalPass();
+		RenderTexture secondPass = new RenderTexture(GAME_WIDTH, GAME_HEIGHT);
+		private float sigma = 3.5f;
+		private float glow = 2f;
 
 		private Music music = new Music("Assets/Music/theme.ogg");
 
@@ -91,11 +93,10 @@ namespace GeometryWars
 			window = new RenderWindow(new VideoMode(windowWidth, windowHeight), title, style);
 
 			//window.SetFramerateLimit(240);
-            window.SetMouseCursorVisible(false);
+			window.SetMouseCursorVisible(false);
 
 			//Add the Closed function to the window
 			window.Closed += window_Closed;
-
 		}
 
 
@@ -107,11 +108,14 @@ namespace GeometryWars
 
 			window.SetVisible(true);
 
-			window.SetActive();
+			window.SetActive(false);
 
 			InitGame();
 
 			clock.Restart();
+
+			Thread thread = new Thread(() => Draw(window));
+			thread.Start();
 
 			while (window.IsOpen && IsGameClosing())
 			{
@@ -123,7 +127,7 @@ namespace GeometryWars
 				Update();
 
 				//Draw the updated app
-				Draw();
+				//Draw();
 
 			}
 
@@ -149,13 +153,16 @@ namespace GeometryWars
 		void InitGame()
 		{
 
+			GenerateStars();
+
 			music.Loop = true;
 			music.Play();
 
 			music.Volume = 20;
 
-			currentMaxEnemies = 3;
-			//EntityManager.AddEnemy(new Sniper(new Vector2f(300f,300f)));
+			currentMaxEnemies = 5;
+
+			//EntityManager.AddEmitter(new HeroTrailEmitter());
 
 		}
 
@@ -203,20 +210,20 @@ namespace GeometryWars
 				}
 			}
 
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Up))
-                sigma += 0.01f;
+			if (Keyboard.IsKeyPressed(Keyboard.Key.Up))
+				sigma += 0.01f;
 
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Down))
-                sigma -= 0.01f;
+			if (Keyboard.IsKeyPressed(Keyboard.Key.Down))
+				sigma -= 0.01f;
 
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Left))
-                glow -= 0.01f;
+			if (Keyboard.IsKeyPressed(Keyboard.Key.Left))
+				glow -= 0.01f;
 
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Right))
-                glow += 0.01f;
+			if (Keyboard.IsKeyPressed(Keyboard.Key.Right))
+				glow += 0.01f;
 
 
-            EntityManager.Update(gameTime.AsSeconds());
+			EntityManager.Update(gameTime.AsSeconds());
 
 			if (!Bomb.CanEnemiesSpawn)
 			{
@@ -241,7 +248,7 @@ namespace GeometryWars
 
 				switch ((SpawnableEnemies)values.GetValue(rnd.Next(values.Length)))
 				{
-					
+
 					case SpawnableEnemies.Shooter:
 						EntityManager.AddEnemy(new Shooter(spawnPos, spawnAngle));
 						break;
@@ -256,16 +263,6 @@ namespace GeometryWars
 
 			}
 
-		}
-
-		/// <summary>
-		/// Draw code of the program
-		/// </summary>
-		private void Draw()
-		{
-
-			window.Clear();
-
 			renderTexture.Clear();
 
 			renderTexture.Draw(borderSprite);
@@ -274,31 +271,57 @@ namespace GeometryWars
 
 			renderTexture.Display();
 
-		    renderTextureSprite.Texture = renderTexture.Texture;
-            window.Draw(renderTextureSprite, new RenderStates(BlendMode.Add));
-            
-            horizontal.Update(renderTexture.Texture, sigma, glow);
+		}
 
-            secondPass.Clear();
+		/// <summary>
+		/// Draw code of the program
+		/// </summary>
+		private void Draw(RenderWindow window)
+		{
 
-            secondPass.Draw(horizontal, new RenderStates(BlendMode.Add));
-			
-            secondPass.Display();
+			while (window.IsOpen)
+			{
 
-            vertical.Update(secondPass.Texture, sigma, glow);
+				window.Clear();
 
-            window.Draw(vertical, new RenderStates(BlendMode.Add));
+				renderTextureSprite.Texture = renderTexture.Texture;
+				window.Draw(renderTextureSprite, new RenderStates(BlendMode.Add));
 
-            //renderTextureSprite.Texture = renderTexture.Texture;
-            //window.Draw(renderTextureSprite, new RenderStates(BlendMode.Add));
+				horizontal.Update(renderTexture.Texture, sigma, glow);
 
-            window.Display();
+				secondPass.Clear();
+
+				secondPass.Draw(horizontal, new RenderStates(BlendMode.Add));
+
+				secondPass.Display();
+
+				vertical.Update(secondPass.Texture, sigma, glow);
+
+				window.Draw(vertical, new RenderStates(BlendMode.Add));
+
+				//renderTextureSprite.Texture = renderTexture.Texture;
+				//window.Draw(renderTextureSprite, new RenderStates(BlendMode.Add));
+
+				window.Display();
+
+			}
 
 		}
 
 		public static void PlaySound(SoundBuffer sound)
 		{
 			SoundManager.AddSound(sound);
+		}
+
+		public static void GenerateStars()
+		{
+			for (int i = 0; i < Star.maxStarCount; i++)
+			{
+				float xPos = rnd.Next((int)Star.MaxX.X, (int)Star.MaxX.Y);
+				float yPos = rnd.Next((int)Star.MaxY.X, (int)Star.MaxY.Y);
+				Vector2f randomPos = new Vector2f(xPos, yPos);
+				EntityManager.AddStar(new Star(randomPos));
+			}
 		}
 
 	}

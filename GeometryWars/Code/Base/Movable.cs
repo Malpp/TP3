@@ -79,7 +79,7 @@ namespace GeometryWars.Code
 
 		}
 
-		public void DoCollisions(IEnumerable<Drawable> entities)
+		public virtual void DoCollisions(IEnumerable<Drawable> entities)
 		{
 
 			foreach (Drawable entity in entities)
