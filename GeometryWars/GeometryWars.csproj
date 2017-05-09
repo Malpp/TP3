@@ -97,7 +97,6 @@
     <Compile Include="Code\Effects\VerticalPass.cs" />
     <Compile Include="Code\Emiters\BombEmitter.cs" />
     <Compile Include="Code\Emiters\EnemyExplosionEmiter.cs" />
-    <Compile Include="Code\Emiters\HeroTrailEmitter.cs" />
     <Compile Include="Code\Emiters\ProjectileExplosionEmitter.cs" />
     <Compile Include="Code\Enemies\SpawnableEnemies.cs" />
     <Compile Include="Code\Main\Bomb.cs" />
@@ -114,7 +113,6 @@
     <Compile Include="Code\Base\Enemy.cs" />
     <Compile Include="Code\Particles\BombParticle.cs" />
     <Compile Include="Code\Particles\EnemyExplosionParticle.cs" />
-    <Compile Include="Code\Particles\HeroTrailParticle.cs" />
     <Compile Include="Code\Particles\ProjectileExplosionParticle.cs" />
     <Compile Include="Code\Projectiles\EnemyProjectile.cs" />
     <Compile Include="Code\Main\EntityManager.cs" />
