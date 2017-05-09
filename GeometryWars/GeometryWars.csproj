@@ -103,6 +103,7 @@
     <Compile Include="Code\Main\Bomb.cs" />
     <Compile Include="Code\Main\Camera.cs" />
     <Compile Include="Code\Main\Controller.cs" />
+    <Compile Include="Code\Main\ScoreManager.cs" />
     <Compile Include="Code\Main\SoundManager.cs" />
     <Compile Include="Code\Main\Stars.cs" />
     <Compile Include="Code\Base\Drawable.cs" />

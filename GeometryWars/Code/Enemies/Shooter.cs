@@ -19,8 +19,9 @@ namespace GeometryWars.Code.Enemies
 		private bool canFire = false;
 		private bool correctAngle = false;
 		private static Color color = new Color(7, 0, 234);
+        private const int pointsWorth = 10;
 
-		public Shooter(Vector2f pos, float initAngle)
+        public Shooter(Vector2f pos, float initAngle)
 			: base(pos, initAngle, shooterSpeed, shooterAngleSpeed, shooterTexture, color)
 		{
 
@@ -75,5 +76,10 @@ namespace GeometryWars.Code.Enemies
 
 			base.Update(timeDelta, entities);
 		}
+
+	    protected override int AddScore()
+	    {
+	        return pointsWorth;
+	    }
 	}
 }

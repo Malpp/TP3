@@ -19,6 +19,7 @@ namespace GeometryWars.Code.Enemies
 		private const float spinnerRotationSpeed = 400f;
 		private Sprite spinnerSprite;
 		private static Color color = new Color(229, 0, 38);
+	    private const int pointsWorth = 10;
 
 		public Spinner(Vector2f pos, float initAngle)
 			: base(pos, initAngle, spinnerSpeed, spinnerAngleSpeed, spinnerTexture, color)
@@ -52,5 +53,10 @@ namespace GeometryWars.Code.Enemies
 
 			base.Draw(window);
 		}
+
+	    protected override int AddScore()
+	    {
+	        return pointsWorth;
+	    }
 	}
 }

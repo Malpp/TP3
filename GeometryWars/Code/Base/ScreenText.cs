@@ -34,7 +34,7 @@ namespace GeometryWars.Code.Base
             //text.Position = pos + Camera.Center * 0.2f - Camera.Pos - adjustPos;
             if (ShouldUpdate())
             {
-                UpdateText();
+                text.DisplayedString = UpdateText();
             }
         }
 

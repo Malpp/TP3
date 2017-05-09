@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GeometryWars.Code.Emmiters;
+using GeometryWars.Code.Main;
 using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
@@ -49,8 +50,12 @@ namespace GeometryWars.Code
 			
 		}
 
+	    protected abstract int AddScore();
+
 		public override void Delete()
 		{
+
+            ScoreManager.AddScore(AddScore());
 
 			EntityManager.AddEmitter(new EnemyExplosionEmiter(Pos, 5, color));
 
