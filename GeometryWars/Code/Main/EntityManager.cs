@@ -22,8 +22,8 @@ namespace GeometryWars.Code
 		private static List<HeroProjectile> heroProjectiles;
 		private static List<EnemyProjectile> enemyProjectiles;
 		private static Hero hero;
-		private static List<Star> stars;
 		private static ParticleSystem system;
+	    private static List<ScreenText> screenTexts;
 
 		public static int EnemyCount
 		{
@@ -47,8 +47,8 @@ namespace GeometryWars.Code
 			heroProjectiles = new List<HeroProjectile>();
 			enemyProjectiles = new List<EnemyProjectile>();
 			hero = Hero.GetInstance();
-			stars = new List<Star>();
 			system = new ParticleSystem(Game.ParticleTexture);
+            screenTexts = new List<ScreenText>();
 
 			system.AddAffector(new BounceOffWall());
 
@@ -63,23 +63,26 @@ namespace GeometryWars.Code
 			UpdateEnemies(timeDelta);
 			UpdateEnemyProjectiles(timeDelta);
 			UpdateHeroProjectiles(timeDelta);
-			UpdateStars(timeDelta);
+			Stars.Update(timeDelta);
 			Bomb.Update(timeDelta);
 			SoundManager.Update();
 			//Update particles
 			system.Update(Time.FromSeconds(timeDelta));
+            UpdateText();
 		}
 
 		public static void Draw(RenderTarget window)
 		{
-			DrawStars(window);
+			Stars.Draw(window);
 			DrawEnemies(window);
-			DrawHeroProjectiles(window);
+		    DrawEnemyProjectiles(window);
+            DrawHeroProjectiles(window);
 			hero.Draw(window);
-			system.Draw(window, new RenderStates(BlendMode.Add));
+			system.Draw(window, RenderStates.Default);
 			Camera.Update(window, hero.Pos);
+            //DrawText(window);
 		}
-
+        
 		#region ADD FUNCTIONS
 
 		public static void AddProjectile(HeroProjectile projectile)
@@ -102,10 +105,10 @@ namespace GeometryWars.Code
 			enemies.Add(enemy);
 		}
 
-		public static void AddStar(Star star)
-		{
-			stars.Add(star);
-		}
+	    public static void AddText(ScreenText text)
+	    {
+	        screenTexts.Add(text);
+	    }
 
 		#endregion
 
@@ -126,14 +129,6 @@ namespace GeometryWars.Code
 		#region PRIVATE FUNCTIONS
 
 		#region DRAW FUNCTIONS
-
-		private static void DrawStars(RenderTarget window)
-		{
-			foreach (Star star in stars)
-			{
-				star.Draw(window);
-			}
-		}
 
 		private static void DrawEnemies(RenderTarget window)
 		{
@@ -159,11 +154,25 @@ namespace GeometryWars.Code
 			}
 		}
 
+	    public static void DrawText(RenderTarget window)
+	    {
+	        foreach (ScreenText screenText in screenTexts)
+	        {
+	            screenText.Draw(window);
+	        }
+	    }
+
 		#endregion
 
 		#region UPDATE FUNCTIONS
 
-		
+	    private static void UpdateText()
+	    {
+	        foreach (ScreenText screenText in screenTexts)
+	        {
+	            screenText.Update();
+	        }
+	    }
 
 		private static void UpdateEnemies(float timeDelta)
 		{
@@ -219,19 +228,6 @@ namespace GeometryWars.Code
 
 			//Remove all heroProjectiles that died
 			heroProjectiles.RemoveAll(x => x.ToDelete);
-		}
-
-		private static void UpdateStars(float timeDelta)
-		{
-			if (hero.Pos != hero.LastPos)
-			{
-				Star.PreUpdate(timeDelta);
-
-				Parallel.ForEach(stars, star =>
-				{
-					star.Update(timeDelta);
-				});
-			}
 		}
 
 		#endregion
