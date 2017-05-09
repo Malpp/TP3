@@ -11,6 +11,10 @@ namespace GeometryWars.Code.Effects
 
     class VerticalPass : Effect
     {
+        public Texture Texture
+        {
+            get { return myTexture; }
+        }
 
         public VerticalPass()
         {

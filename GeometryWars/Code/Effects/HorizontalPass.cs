@@ -11,6 +11,11 @@ namespace GeometryWars.Code.Effects
     class HorizontalPass : Effect
     {
 
+        public Texture Texture
+        {
+            get { return myTexture; }
+        }
+
         public HorizontalPass()
         {
             // Load the texture and initialize the sprite

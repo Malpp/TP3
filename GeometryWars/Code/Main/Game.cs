@@ -14,315 +14,307 @@ using GeometryWars.Code.Effects;
 using GeometryWars.Code.Emiters;
 using GeometryWars.Code.Enemies;
 using GeometryWars.Code.Main;
+using GeometryWars.Code.Text;
 using NetEXT.MathFunctions;
 using NetEXT.Particles;
 using SFML.Audio;
 
 namespace GeometryWars
 {
-	class Game
-	{
+    class Game
+    {
+
+        #region Global vars
+
+        //The window of application
+        private RenderWindow window;
+
+        //Used to time the movement of the objects on screen
+        Clock clock = new Clock();
+        Time gameTime = new Time();
 
-		#region Global vars
+        //FPS vars
+        float timeElapsed = 0;
+        int fps = 0;
 
-		//The window of application
-		private RenderWindow window;
+        //Height and width of the game window
+        public const int GAME_WIDTH = 1920;
+        public const int GAME_HEIGHT = 1080;
 
-		//Used to time the movement of the objects on screen
-		Clock clock = new Clock();
-		Time gameTime = new Time();
+        #endregion
 
-		//FPS vars
-		float timeElapsed = 0;
-		int fps = 0;
+        public static Random rnd = new Random();
 
-		//Height and width of the game window
-		public const int GAME_WIDTH = 1920;
-		public const int GAME_HEIGHT = 1080;
+        private static Texture borderTexture = new Texture("Assets/Textures/border.png");
+        public static readonly Texture ParticleTexture = new Texture("Assets/Particles/particle.png");
+        private static Sprite borderSprite = new Sprite(borderTexture);
+        RenderTexture renderTexture = new RenderTexture(GAME_WIDTH, GAME_HEIGHT);
+        Sprite renderTextureSprite = new Sprite();
+        Shader horiShader = new Shader(null, "Assets/Shaders/hori.frag");
+        Shader myShader;
+        private static Sound soundBuffer = new Sound();
+        private Pixelate pixelate = new Pixelate();
+        RenderTexture secondPass = new RenderTexture(GAME_WIDTH, GAME_HEIGHT);
+        private float sigma = 3.5f;
+        private float glow = 2f;
+        Clock drawClock = new Clock();
+        float totalTime = 0;
+        HorizontalPass horizontal = new HorizontalPass();
+        VerticalPass vertical = new VerticalPass();
+        RenderTexture renderA = new RenderTexture(GAME_WIDTH, GAME_HEIGHT);
+        RenderTexture renderB = new RenderTexture(GAME_WIDTH, GAME_HEIGHT);
+        private bool isRenderAReady = false;
+        private Thread drawThread;
 
-		#endregion
+        private Music music = new Music("Assets/Music/theme.ogg");
 
-		public static Random rnd = new Random();
+        private const float SpawnRadius = 200f;
+        private float currentMaxEnemies;
 
-		private static Texture borderTexture = new Texture("Assets/Textures/border.png");
-		public static readonly Texture ParticleTexture = new Texture("Assets/Particles/particle.png");
-		private static Sprite borderSprite = new Sprite(borderTexture);
-		RenderTexture renderTexture = new RenderTexture(GAME_WIDTH, GAME_HEIGHT);
-		Sprite renderTextureSprite = new Sprite();
-		Shader horiShader = new Shader(null, "Assets/Shaders/hori.frag");
-		Shader myShader;
-		private static Sound soundBuffer = new Sound();
-		private Pixelate pixelate = new Pixelate();
-		HorizontalPass horizontal = new HorizontalPass();
-		VerticalPass vertical = new VerticalPass();
-		RenderTexture secondPass = new RenderTexture(GAME_WIDTH, GAME_HEIGHT);
-		private float sigma = 3.5f;
-		private float glow = 2f;
+        public const int BORDER_SIZE = 5;
 
-		private Music music = new Music("Assets/Music/theme.ogg");
+        public static float GAME_X_LIMIT
+        {
+            get { return borderTexture.Size.X; }
+        }
 
-		private const float SpawnRadius = 200f;
-		private float currentMaxEnemies;
+        public static float GAME_Y_LIMIT
+        {
+            get { return borderTexture.Size.Y; }
+        }
 
-		public const int BORDER_SIZE = 5;
+        public static Vector2f GAME_SIZE
+        {
+            get { return (Vector2f)borderTexture.Size; }
+        }
 
-		public static float GAME_X_LIMIT
-		{
-			get { return borderTexture.Size.X; }
-		}
+        /// <summary>
+        /// Constructor of the window
+        /// </summary>
+        /// <param name="windowHeight">Height of the window</param>
+        /// <param name="windowWidth">Width of the window</param>
+        /// <param name="title">Title of the window</param>
+        /// <param name="style">Style of the window</param>
+        public Game(uint windowHeight = GAME_HEIGHT, uint windowWidth = GAME_WIDTH, string title = "SFML APP", Styles style = Styles.None)
+        {
+            window = new RenderWindow(new VideoMode(windowWidth, windowHeight), title, style);
 
-		public static float GAME_Y_LIMIT
-		{
-			get { return borderTexture.Size.Y; }
-		}
+            window.SetVerticalSyncEnabled(false);
 
-		public static Vector2f GAME_SIZE
-		{
-			get { return (Vector2f)borderTexture.Size; }
-		}
+            //window.SetFramerateLimit(60);
+            window.SetMouseCursorVisible(false);
 
-		/// <summary>
-		/// Constructor of the window
-		/// </summary>
-		/// <param name="windowHeight">Height of the window</param>
-		/// <param name="windowWidth">Width of the window</param>
-		/// <param name="title">Title of the window</param>
-		/// <param name="style">Style of the window</param>
-		public Game(uint windowHeight = GAME_HEIGHT, uint windowWidth = GAME_WIDTH, string title = "SFML APP", Styles style = Styles.None)
-		{
-			window = new RenderWindow(new VideoMode(windowWidth, windowHeight), title, style);
+            //Add the Closed function to the window
+            window.Closed += window_Closed;
+        }
 
-			//window.SetFramerateLimit(240);
-			window.SetMouseCursorVisible(false);
 
-			//Add the Closed function to the window
-			window.Closed += window_Closed;
-		}
+        /// <summary>
+        /// Main loop of the program
+        /// </summary>
+        public void Run()
+        {
 
+            window.SetVisible(true);
 
-		/// <summary>
-		/// Main loop of the program
-		/// </summary>
-		public void Run()
-		{
+            window.SetActive(false);
 
-			window.SetVisible(true);
+            InitGame();
 
-			window.SetActive(false);
+            clock.Restart();
 
-			InitGame();
+            //Thread thread = new Thread(() => Draw(window));
+            //thread.Start();
 
-			clock.Restart();
+            while (window.IsOpen && IsGameClosing())
+            {
 
-			Thread thread = new Thread(() => Draw(window));
-			thread.Start();
+                //Call the Events
+                window.DispatchEvents();
 
-			while (window.IsOpen && IsGameClosing())
-			{
+                //Update the game
+                Update();
 
-				//Call the Events
-				window.DispatchEvents();
+                //Draw the updated app
+                Draw();
 
-				//Update the game
-				Update();
+            }
 
-				//Draw the updated app
-				//Draw();
 
-			}
+        }
 
+        bool IsGameClosing()
+        {
 
-		}
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Escape))
+            {
+                window.Close();
+                return false;
+            }
 
-		bool IsGameClosing()
-		{
+            return true;
 
-			if (Keyboard.IsKeyPressed(Keyboard.Key.Escape))
-			{
-				window.Close();
-				return false;
-			}
+        }
 
-			return true;
+        /// <summary>
+        /// Sets up global vars to the program
+        /// </summary>
+        void InitGame()
+        {
 
-		}
+            music.Loop = true;
+            music.Play();
 
-		/// <summary>
-		/// Sets up global vars to the program
-		/// </summary>
-		void InitGame()
-		{
+            music.Volume = 20;
 
-			GenerateStars();
+            currentMaxEnemies = 5;
 
-			music.Loop = true;
-			music.Play();
+            EntityManager.AddText(new ScoreText());
 
-			music.Volume = 20;
+            //EntityManager.AddEmitter(new HeroTrailEmitter());
 
-			currentMaxEnemies = 5;
+        }
 
-			//EntityManager.AddEmitter(new HeroTrailEmitter());
+        /// <summary>
+        /// Called when the window "X" is clicked
+        /// </summary>
+        void window_Closed(object sender, EventArgs e)
+        {
 
-		}
+            window.Close();
 
-		/// <summary>
-		/// Called when the window "X" is clicked
-		/// </summary>
-		void window_Closed(object sender, EventArgs e)
-		{
+        }
 
-			window.Close();
+        /// <summary>
+        /// Update code of the program
+        /// </summary>
+        private void Update()
+        {
 
-		}
+            gameTime = clock.Restart();
 
-		/// <summary>
-		/// Update code of the program
-		/// </summary>
-		private void Update()
-		{
+            #region FPS
 
-			gameTime = clock.Restart();
+            timeElapsed += gameTime.AsSeconds();
 
-			#region FPS
+            if (timeElapsed > 1)
+            {
 
-			timeElapsed += gameTime.AsSeconds();
+                Console.WriteLine("FPS: {0}", fps);
 
-			if (timeElapsed > 1)
-			{
+                fps = 0;
+                timeElapsed = 0;
 
-				Console.WriteLine("FPS: {0}", fps);
+            }
 
-				fps = 0;
-				timeElapsed = 0;
+            fps++;
 
-			}
+            #endregion
 
-			fps++;
+            if (Keyboard.IsKeyPressed(Keyboard.Key.E))
+            {
+                for (int i = 0; i < 500; i++)
+                {
+                    //EntityManager.AddEnemy(new Shooter(new Vector2f(100 + i, 100), -90));
+                }
+            }
 
-			#endregion
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Up))
+                sigma += 0.01f;
 
-			if (Keyboard.IsKeyPressed(Keyboard.Key.E))
-			{
-				for (int i = 0; i < 500; i++)
-				{
-					//EntityManager.AddEnemy(new Shooter(new Vector2f(100 + i, 100), -90));
-				}
-			}
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Down))
+                sigma -= 0.01f;
 
-			if (Keyboard.IsKeyPressed(Keyboard.Key.Up))
-				sigma += 0.01f;
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Left))
+                glow -= 0.01f;
 
-			if (Keyboard.IsKeyPressed(Keyboard.Key.Down))
-				sigma -= 0.01f;
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Right))
+                glow += 0.01f;
 
-			if (Keyboard.IsKeyPressed(Keyboard.Key.Left))
-				glow -= 0.01f;
 
-			if (Keyboard.IsKeyPressed(Keyboard.Key.Right))
-				glow += 0.01f;
+            EntityManager.Update(gameTime.AsSeconds());
 
+            if (!Bomb.CanEnemiesSpawn)
+            {
+                EntityManager.DeleteAllEnemies();
+            }
 
-			EntityManager.Update(gameTime.AsSeconds());
+            if (EntityManager.EnemyCount < currentMaxEnemies && Bomb.CanEnemiesSpawn)
+            {
 
-			if (!Bomb.CanEnemiesSpawn)
-			{
-				EntityManager.DeleteAllEnemies();
-			}
+                Vector2f spawnPos;
 
-			if (EntityManager.EnemyCount < currentMaxEnemies && Bomb.CanEnemiesSpawn)
-			{
+                Vector2f heroPos = Hero.GetInstance().Pos;
 
-				Vector2f spawnPos;
+                do
+                {
+                    spawnPos = new Vector2f(rnd.Next(50, (int)GAME_X_LIMIT - 50), rnd.Next(50, (int)GAME_Y_LIMIT - 50));
+                } while (Math.Abs(Common.DistanceBetweenTwoPoints(spawnPos, heroPos)) < SpawnRadius);
 
-				Vector2f heroPos = Hero.GetInstance().Pos;
+                float spawnAngle = rnd.Next(0, 360);
 
-				do
-				{
-					spawnPos = new Vector2f(rnd.Next(50, (int)GAME_X_LIMIT - 50), rnd.Next(50, (int)GAME_Y_LIMIT - 50));
-				} while (Math.Abs(Common.DistanceBetweenTwoPoints(spawnPos, heroPos)) < SpawnRadius);
+                Array values = Enum.GetValues(typeof(SpawnableEnemies));
 
-				float spawnAngle = rnd.Next(0, 360);
+                switch ((SpawnableEnemies)values.GetValue(rnd.Next(values.Length)))
+                {
 
-				Array values = Enum.GetValues(typeof(SpawnableEnemies));
+                    case SpawnableEnemies.Shooter:
+                        EntityManager.AddEnemy(new Shooter(spawnPos, spawnAngle));
+                        break;
+                    case SpawnableEnemies.Sniper:
+                        EntityManager.AddEnemy(new Sniper(spawnPos));
+                        break;
+                    case SpawnableEnemies.Spinner:
+                        EntityManager.AddEnemy(new Spinner(spawnPos, spawnAngle));
+                        break;
 
-				switch ((SpawnableEnemies)values.GetValue(rnd.Next(values.Length)))
-				{
+                }
 
-					case SpawnableEnemies.Shooter:
-						EntityManager.AddEnemy(new Shooter(spawnPos, spawnAngle));
-						break;
-					case SpawnableEnemies.Sniper:
-						EntityManager.AddEnemy(new Sniper(spawnPos));
-						break;
-					case SpawnableEnemies.Spinner:
-						EntityManager.AddEnemy(new Spinner(spawnPos, spawnAngle));
-						break;
+            }
 
-				}
+        }
 
-			}
+        /// <summary>
+        /// Draw code of the program
+        /// </summary>
+        private void Draw()
+        {
 
-			renderTexture.Clear();
+            totalTime += drawClock.Restart().AsSeconds();
+            if (totalTime > 0.016f)
+            {
+                totalTime = 0;
 
-			renderTexture.Draw(borderSprite);
+                window.Clear();
 
-			EntityManager.Draw(renderTexture);
+                renderTexture.Clear();
+                renderTexture.Draw(borderSprite);
+                EntityManager.Draw(renderTexture);
+                renderTexture.Display();
+                renderTextureSprite.Texture = renderTexture.Texture;
+                window.Draw(renderTextureSprite, new RenderStates(BlendMode.Add));
 
-			renderTexture.Display();
+                horizontal.Update(renderTextureSprite.Texture, sigma, glow);
 
-		}
+                secondPass.Clear();
+                secondPass.Draw(horizontal, new RenderStates(BlendMode.Add));
+                secondPass.Display();
 
-		/// <summary>
-		/// Draw code of the program
-		/// </summary>
-		private void Draw(RenderWindow window)
-		{
+                vertical.Update(secondPass.Texture, sigma, glow);
 
-			while (window.IsOpen)
-			{
+                window.Draw(vertical, new RenderStates(BlendMode.Add));
 
-				window.Clear();
+                EntityManager.DrawText(window);
 
-				renderTextureSprite.Texture = renderTexture.Texture;
-				window.Draw(renderTextureSprite, new RenderStates(BlendMode.Add));
+                window.Display();
+            }
 
-				horizontal.Update(renderTexture.Texture, sigma, glow);
 
-				secondPass.Clear();
+        }
 
-				secondPass.Draw(horizontal, new RenderStates(BlendMode.Add));
-
-				secondPass.Display();
-
-				vertical.Update(secondPass.Texture, sigma, glow);
-
-				window.Draw(vertical, new RenderStates(BlendMode.Add));
-
-				//renderTextureSprite.Texture = renderTexture.Texture;
-				//window.Draw(renderTextureSprite, new RenderStates(BlendMode.Add));
-
-				window.Display();
-
-			}
-
-		}
-
-		public static void PlaySound(SoundBuffer sound)
-		{
-			SoundManager.AddSound(sound);
-		}
-
-		public static void GenerateStars()
-		{
-			for (int i = 0; i < Star.maxStarCount; i++)
-			{
-				float xPos = rnd.Next((int)Star.MaxX.X, (int)Star.MaxX.Y);
-				float yPos = rnd.Next((int)Star.MaxY.X, (int)Star.MaxY.Y);
-				Vector2f randomPos = new Vector2f(xPos, yPos);
-				EntityManager.AddStar(new Star(randomPos));
-			}
-		}
-
-	}
+        public static void PlaySound(SoundBuffer sound)
+        {
+            SoundManager.AddSound(sound);
+        }
+    }
 }
