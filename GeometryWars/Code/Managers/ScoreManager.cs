@@ -33,5 +33,10 @@ namespace GeometryWars.Code.Main
             score = 0;
         }
 
+	    public static void ResetMulti()
+	    {
+		    multiplier = 1;
+	    }
+
     }
 }

@@ -1,0 +1,2 @@
+﻿score=>Score:~~~Pointages:
+life=>Life:~~~Vie:

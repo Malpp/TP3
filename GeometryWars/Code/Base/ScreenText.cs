@@ -38,6 +38,11 @@ namespace GeometryWars.Code.Base
             }
         }
 
+	    public virtual void ForceUpdate()
+	    {
+		    text.DisplayedString = UpdateText();
+	    }
+
         public virtual void Draw(RenderTarget window)
         {
             window.Draw(text);

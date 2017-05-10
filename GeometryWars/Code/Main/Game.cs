@@ -170,6 +170,8 @@ namespace GeometryWars
             currentMaxEnemies = 5;
 
             EntityManager.AddText(new ScoreText());
+			EntityManager.AddText(new LifeText());
+			StringTable.GetInstance().LoadFromTextFile("Assets/Text/Language.txt");
 
             //EntityManager.AddEmitter(new HeroTrailEmitter());
 

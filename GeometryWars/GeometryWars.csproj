@@ -103,8 +103,9 @@
     <Compile Include="Code\Main\Bomb.cs" />
     <Compile Include="Code\Main\Camera.cs" />
     <Compile Include="Code\Main\Controller.cs" />
-    <Compile Include="Code\Main\ScoreManager.cs" />
-    <Compile Include="Code\Main\SoundManager.cs" />
+    <Compile Include="Code\Main\StringTable.cs" />
+    <Compile Include="Code\Managers\ScoreManager.cs" />
+    <Compile Include="Code\Managers\SoundManager.cs" />
     <Compile Include="Code\Main\Stars.cs" />
     <Compile Include="Code\Base\Drawable.cs" />
     <Compile Include="Code\Base\FollowerEnemy.cs" />
@@ -117,12 +118,13 @@
     <Compile Include="Code\Particles\EnemyExplosionParticle.cs" />
     <Compile Include="Code\Particles\ProjectileExplosionParticle.cs" />
     <Compile Include="Code\Projectiles\EnemyProjectile.cs" />
-    <Compile Include="Code\Main\EntityManager.cs" />
+    <Compile Include="Code\Managers\EntityManager.cs" />
     <Compile Include="Code\Main\Game.cs" />
     <Compile Include="Code\Main\Hero.cs" />
     <Compile Include="Code\Base\Movable.cs" />
     <Compile Include="Code\Projectiles\HeroProjectile.cs" />
     <Compile Include="Code\Base\Projectile.cs" />
+    <Compile Include="Code\Text\LifeText.cs" />
     <Compile Include="Code\Text\ScoreText.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -327,6 +329,9 @@
     <EmbeddedResource Include="Assets\Textures\star.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <Content Include="Assets\Text\Language.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="ExtLibs\csfml-audio-2.dll" />
     <Content Include="ExtLibs\csfml-graphics-2.dll" />
     <Content Include="ExtLibs\csfml-network-2.dll" />

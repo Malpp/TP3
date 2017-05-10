@@ -14,9 +14,6 @@ namespace GeometryWars.Code.Main
 	{
 
 		static Color color = Color.Yellow;
-		private const float bombCooldown = 5f;
-		private static bool canFire = true;
-		private static float cooldownTime;
 		private static bool enemiesCanSpawn = true;
 		private const float bombTime = 1.5f;
 		private static float enemiesRespawnTimeDelta;
@@ -39,18 +36,6 @@ namespace GeometryWars.Code.Main
 
 		public static void Update(float timeDelta)
 		{
-			if (!canFire)
-			{
-
-				cooldownTime += timeDelta;
-
-				if (cooldownTime > bombCooldown)
-				{
-					canFire = true;
-					cooldownTime = 0;
-				}
-
-			}
 
 			if (!enemiesCanSpawn)
 			{
@@ -70,17 +55,11 @@ namespace GeometryWars.Code.Main
 		public static void Fire(Vector2f pos)
 		{
 
-			if (canFire)
-			{
-				canFire = false;
+			enemiesCanSpawn = false;
 
-				enemiesCanSpawn = false;
+			SoundManager.AddSound(bombSound);
 
-				SoundManager.AddSound(bombSound);
-
-				EntityManager.AddEmitter(new BombEmitter(pos, Color));
-			}
-
+			EntityManager.AddEmitter(new BombEmitter(pos, Color));
 
 		}
 

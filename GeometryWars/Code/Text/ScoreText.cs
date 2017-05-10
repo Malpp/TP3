@@ -13,6 +13,7 @@ namespace GeometryWars.Code.Text
     {
         private int cScore = -1;
         private int cMul = 0;
+	    private const string key = "score";
 
         public ScoreText()
             : base(new Vector2f(10,10), "Score", 30)
@@ -33,7 +34,7 @@ namespace GeometryWars.Code.Text
 
         protected override string UpdateText()
         {
-            return "Score:" + cScore + " " + cMul + "x";
+			return StringTable.GetInstance().GetWord(key) + ScoreManager.Score + " " + ScoreManager.Multi + "x";
         }
     }
 }

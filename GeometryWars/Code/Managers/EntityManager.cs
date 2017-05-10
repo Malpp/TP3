@@ -68,6 +68,7 @@ namespace GeometryWars.Code
 			SoundManager.Update();
 			//Update particles
 			system.Update(Time.FromSeconds(timeDelta));
+			StringTable.GetInstance().Update();
             UpdateText();
 		}
 
@@ -121,6 +122,14 @@ namespace GeometryWars.Code
 			foreach (EnemyProjectile enemyProjectile in enemyProjectiles)
 			{
 				enemyProjectile.Delete();
+			}
+		}
+
+		public static void ForceUpdateText()
+		{
+			foreach (ScreenText screenText in screenTexts)
+			{
+				screenText.ForceUpdate();
 			}
 		}
 

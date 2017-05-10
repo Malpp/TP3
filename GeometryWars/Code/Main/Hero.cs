@@ -25,10 +25,21 @@ namespace GeometryWars.Code
 		private bool canFire = true;
 		private static Hero hero;
 		Vector2f direction = new Vector2f();
+		private int life;
+		private const float bombCooldown = 5f;
+		private static bool canFireBomb = true;
+		private static float bombDelta;
+		private int lastLife;
+		private int multiplierResetStep = 5;
 
 		public static float Speed
 		{
 			get { return heroSpeed; }
+		}
+
+		public int Life
+		{
+			get { return life; }
 		}
 
 		public Vector2f Direction
@@ -49,15 +60,37 @@ namespace GeometryWars.Code
 			: base(pos, initAngle, heroTexture)
 		{
 
+			life = 100;
+			lastLife = life - multiplierResetStep;
 
 		}
 
 		public override void Update(float timeDelta, IEnumerable<Drawable> entities = null)
 		{
 
-			if (Keyboard.IsKeyPressed(Keyboard.Key.Return) || Controller.GetBombKey())
+			if (life < 1)
 			{
+				life = 100;
+				lastLife = life - multiplierResetStep;
 				Bomb.Fire(Pos);
+				ScoreManager.Reset();
+			}
+
+			if ((Keyboard.IsKeyPressed(Keyboard.Key.Return) || Controller.GetBombKey()) && canFireBomb)
+			{
+				canFireBomb = false;
+				Bomb.Fire(Pos);
+			}
+
+			if (!canFireBomb)
+			{
+				bombDelta += timeDelta;
+
+				if (bombDelta > bombCooldown)
+				{
+					bombDelta = 0;
+					canFireBomb = true;
+				}
 			}
 
 			if (Keyboard.IsKeyPressed(Keyboard.Key.Space) && canFire)
@@ -126,5 +159,16 @@ namespace GeometryWars.Code
 			//Maybe remove this, not sure yet
 
 		}
+
+		public void TakeDamage(int damage)
+		{
+			life -= damage;
+			if (life < lastLife)
+			{
+				ScoreManager.ResetMulti();
+				lastLife -= multiplierResetStep;
+			}
+		}
+
 	}
 }

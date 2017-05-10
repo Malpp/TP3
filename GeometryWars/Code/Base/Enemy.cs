@@ -47,7 +47,7 @@ namespace GeometryWars.Code
 
 		protected override void HandleCollision(Drawable entity)
 		{
-			
+			Hero.GetInstance().TakeDamage(5);
 		}
 
 	    protected abstract int AddScore();
@@ -55,7 +55,8 @@ namespace GeometryWars.Code
 		public override void Delete()
 		{
 
-            ScoreManager.AddScore(AddScore());
+			if(Bomb.CanEnemiesSpawn)
+				ScoreManager.AddScore(AddScore());
 
 			EntityManager.AddEmitter(new EnemyExplosionEmiter(Pos, 5, color));
 
