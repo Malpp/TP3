@@ -31,7 +31,6 @@ namespace GeometryWars.Code
 			Game.PlaySound(hitSound);
 			//Do this l8ter or something
 			Hero.GetInstance().TakeDamage(1);
-			ScoreManager.ResetMulti();
 		}
 
 		#endregion Protected Methods

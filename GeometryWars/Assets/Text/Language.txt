@@ -1,2 +1,3 @@
 ﻿score=>Score:~~~Pointages:
 life=>Life:~~~Vie:
+bomb=>Bombs:~~~Bombes:

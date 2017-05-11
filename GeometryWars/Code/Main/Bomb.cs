@@ -9,10 +9,7 @@ namespace GeometryWars.Code.Main
 	{
 		#region Private Fields
 		private const float bombTime = 1.5f;
-		private static readonly Texture BombTexture = new Texture("Assets/Textures/bomb.png");
-		private static Vector2f basePos = new Vector2f(50, 80);
 		private static SoundBuffer bombSound = new SoundBuffer("Assets/SFX/Gravity_well_die.ogg");
-		private static Sprite bombSprite = new Sprite(BombTexture);
 		private static Color color = Color.Yellow;
 		private static bool enemiesCanSpawn = true;
 		private static float enemiesRespawnTimeDelta;
@@ -38,15 +35,6 @@ namespace GeometryWars.Code.Main
 		#endregion Public Properties
 
 		#region Public Methods
-
-		public static void Draw(RenderTarget window)
-		{
-			for (int i = 0; i < Hero.GetInstance().BombCount; i++)
-			{
-				bombSprite.Position = basePos + new Vector2f(40 * i, 0);
-				window.Draw(bombSprite);
-			}
-		}
 
 		public static void Fire(Vector2f pos)
 		{

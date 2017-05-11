@@ -107,11 +107,11 @@ namespace GeometryWars.Code.Main
 
 			for (int i = 0; i < lines.Length; i++)
 			{
-				string[] dict = lines[i].Split(new[] { '=', '>' }, StringSplitOptions.RemoveEmptyEntries);
+				string[] dict = lines[i].Split(new[] { "=>" }, StringSplitOptions.RemoveEmptyEntries);
 				if (dict.Length != 2)
 					throw new IndexOutOfRangeException("Can't find keys and values");
 
-				string[] values = dict[1].Split(new[] { '~', '~', '~' }, StringSplitOptions.RemoveEmptyEntries);
+				string[] values = dict[1].Split(new[] { "~~~" }, StringSplitOptions.RemoveEmptyEntries);
 
 				if (values.Length != NoOfLocales)
 					throw new IndexOutOfRangeException("invalid number of values");

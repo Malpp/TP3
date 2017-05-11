@@ -11,7 +11,7 @@ namespace GeometryWars.Code.Enemies
 		private const float fireSpeed = 5f;
 		private const float miniAngleSpeed = 120f;
 		private const float miniSpeed = 150f;
-		private const int pointsWorth = 10;
+		private const int pointsWorth = 5;
 		private static Color color = new Color(255, 106, 0);
 		private static Texture miniSniperTexture = new Texture("Assets/Textures/mini.png");
 		private bool canFire;

@@ -7,7 +7,7 @@ namespace GeometryWars.Code.Enemies
 	class Spinner : FollowerEnemy
 	{
 		#region Private Fields
-		private const int pointsWorth = 10;
+		private const int pointsWorth = 15;
 		private const float spinnerAngleSpeed = 400f;
 		private const float spinnerRotationSpeed = 400f;
 		private const float spinnerSpeed = 400f;

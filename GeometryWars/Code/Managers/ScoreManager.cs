@@ -34,11 +34,29 @@
 			score = 0;
 		}
 
-		public static void ResetMulti()
+		public static void UpdateMultiplier(int killCount)
 		{
-			multiplier = 1;
+			if (killCount > 2000)
+				multiplier = 10;
+			else if (killCount > 1500)
+				multiplier = 9;
+			else if (killCount > 1200)
+				multiplier = 8;
+			else if (killCount > 900)
+				multiplier = 7;
+			else if (killCount > 600)
+				multiplier = 6;
+			else if (killCount > 300)
+				multiplier = 5;
+			else if (killCount > 150)
+				multiplier = 4;
+			else if (killCount > 75)
+				multiplier = 3;
+			else if (killCount > 25)
+				multiplier = 2;
+			else
+				multiplier = 1;
 		}
-
 		#endregion Public Methods
 	}
 }

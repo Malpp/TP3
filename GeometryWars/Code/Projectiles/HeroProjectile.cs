@@ -27,6 +27,7 @@ namespace GeometryWars.Code.Projectiles
 			{
 				Delete();
 				entity.Delete();
+				Hero.GetInstance().AddEnemyKill();
 			}
 		}
 

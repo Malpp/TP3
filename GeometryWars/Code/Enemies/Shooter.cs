@@ -9,7 +9,7 @@ namespace GeometryWars.Code.Enemies
 	{
 		#region Private Fields
 		private const float fireSpeed = 1f;
-		private const int pointsWorth = 10;
+		private const int pointsWorth = 15;
 		private const float shooterAngleSpeed = 125f;
 		private const float shooterSpeed = 300f;
 		private static Color color = new Color(7, 0, 234);

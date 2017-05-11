@@ -124,6 +124,7 @@
     <Compile Include="Code\Base\Movable.cs" />
     <Compile Include="Code\Projectiles\HeroProjectile.cs" />
     <Compile Include="Code\Base\Projectile.cs" />
+    <Compile Include="Code\Text\BombText.cs" />
     <Compile Include="Code\Text\LifeText.cs" />
     <Compile Include="Code\Text\ScoreText.cs" />
     <Compile Include="Program.cs" />

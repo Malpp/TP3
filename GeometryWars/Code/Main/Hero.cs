@@ -1,4 +1,5 @@
-﻿using GeometryWars.Code.Main;
+﻿using System;
+using GeometryWars.Code.Main;
 using GeometryWars.Code.Projectiles;
 using SFML.Audio;
 using SFML.Graphics;
@@ -28,6 +29,7 @@ namespace GeometryWars.Code
 		private int lastLife;
 		private int life;
 		private int multiplierResetStep = 5;
+		private int enemyKills;
 		#endregion Private Fields
 
 		#region Private Constructors
@@ -63,6 +65,12 @@ namespace GeometryWars.Code
 
 		#region Public Methods
 
+		public void AddEnemyKill()
+		{
+			enemyKills++;
+			ScoreManager.UpdateMultiplier(enemyKills);
+		}
+
 		public static Hero GetInstance()
 		{
 			if (hero == null)
@@ -77,6 +85,7 @@ namespace GeometryWars.Code
 			bombCount = totalBombs;
 			Bomb.Fire(Pos);
 			ScoreManager.Reset();
+			enemyKills = 0;
 		}
 
 		public void TakeDamage(int damage)
@@ -84,7 +93,8 @@ namespace GeometryWars.Code
 			life -= damage;
 			if (life < lastLife)
 			{
-				ScoreManager.ResetMulti();
+				enemyKills = 0;
+				ScoreManager.UpdateMultiplier(enemyKills);
 				lastLife -= multiplierResetStep;
 			}
 		}

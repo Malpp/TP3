@@ -59,9 +59,11 @@ namespace GeometryWars.Code.Main
 								hero.LastPos
 							) / (Hero.Speed * timeDelta);
 
+				Vector2f newPos = Common.MovePointByAngle(shipSpeed, angle + 180) * timeDelta;
+
 				Parallel.For(0, maxStarCount, i =>
 				{
-					stars[i].Position += Common.MovePointByAngle(starSpeeds[i] * shipSpeed, angle + 180) * timeDelta;
+					stars[i].Position += newPos * starSpeeds[i];
 
 					if (stars[i].Position.X < MaxX.X)
 					{

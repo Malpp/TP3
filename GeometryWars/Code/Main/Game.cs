@@ -175,7 +175,6 @@ namespace GeometryWars
 			window.Draw(vertical);
 
 			EntityManager.DrawText(window);
-			Bomb.Draw(window);
 
 			window.Display();
 
@@ -196,6 +195,7 @@ namespace GeometryWars
 
 			EntityManager.AddText(new ScoreText());
 			EntityManager.AddText(new LifeText());
+			EntityManager.AddText(new BombText());
 			StringTable.GetInstance().LoadFromTextFile("Assets/Text/Language.txt");
 		}
 
