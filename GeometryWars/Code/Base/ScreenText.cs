@@ -1,56 +1,67 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GeometryWars.Code.Main;
-using SFML.Graphics;
+﻿using SFML.Graphics;
 using SFML.System;
 
 namespace GeometryWars.Code.Base
 {
-    abstract class ScreenText
-    {
-        static Font font = new Font("Assets/Fonts/emulogic.ttf");
-        private SFML.Graphics.Text text;
-        private Vector2f pos;
-        private static Vector2f adjustPos = new Vector2f(30, 0);
+	abstract class ScreenText
+	{
+		#region Private Fields
+		private static Vector2f adjustPos = new Vector2f(30, 0);
+		private static Font font = new Font("Assets/Fonts/emulogic.ttf");
+		private Vector2f pos;
+		private SFML.Graphics.Text text;
+		#endregion Private Fields
 
-        public Vector2f Pos
-        {
-            get { return pos; }
-            protected set { pos = value; }
-        }
+		#region Public Constructors
 
-        public ScreenText(Vector2f pos, string initString, int size)
-        {
-            text = new SFML.Graphics.Text(initString, font, (uint)size);
-            text.Position = pos;
-            this.pos = pos;
-        }
+		public ScreenText(Vector2f pos, string initString, int size)
+		{
+			text = new SFML.Graphics.Text(initString, font, (uint)size);
+			text.Position = pos;
+			this.pos = pos;
+		}
 
-        public virtual void Update()
-        {
-            //text.Position = pos + Camera.Center * 0.2f - Camera.Pos - adjustPos;
-            if (ShouldUpdate())
-            {
-                text.DisplayedString = UpdateText();
-            }
-        }
+		#endregion Public Constructors
 
-	    public virtual void ForceUpdate()
-	    {
-		    text.DisplayedString = UpdateText();
-	    }
+		#region Public Properties
 
-        public virtual void Draw(RenderTarget window)
-        {
-            window.Draw(text);
-        }
+		public Vector2f Pos
+		{
+			get { return pos; }
+			protected set { pos = value; }
+		}
 
+		#endregion Public Properties
 
-        protected abstract string UpdateText();
-        protected abstract bool ShouldUpdate();
+		#region Public Methods
 
-    }
+		public virtual void Draw(RenderTarget window)
+		{
+			window.Draw(text);
+		}
+
+		public virtual void ForceUpdate()
+		{
+			text.DisplayedString = UpdateText();
+		}
+
+		public virtual void Update()
+		{
+			//text.Position = pos + Camera.Center * 0.2f - Camera.Pos - adjustPos;
+			if (ShouldUpdate())
+			{
+				text.DisplayedString = UpdateText();
+			}
+		}
+
+		#endregion Public Methods
+
+		#region Protected Methods
+
+		protected abstract bool ShouldUpdate();
+
+		protected abstract string UpdateText();
+
+		#endregion Protected Methods
+	}
 }

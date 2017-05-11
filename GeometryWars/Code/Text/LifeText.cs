@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GeometryWars.Code.Base;
+﻿using GeometryWars.Code.Base;
 using GeometryWars.Code.Main;
 using SFML.System;
 
@@ -11,14 +6,21 @@ namespace GeometryWars.Code.Text
 {
 	class LifeText : ScreenText
 	{
-		private int cLife;
+		#region Private Fields
 		private const string key = "life";
+		private int cLife;
+		#endregion Private Fields
+
+		#region Public Constructors
 
 		public LifeText()
 			: base(new Vector2f(10, 40), "Life:", 30)
 		{
-			
 		}
+
+		#endregion Public Constructors
+
+		#region Protected Methods
 
 		protected override bool ShouldUpdate()
 		{
@@ -34,5 +36,7 @@ namespace GeometryWars.Code.Text
 		{
 			return StringTable.GetInstance().GetWord(key) + Hero.GetInstance().Life;
 		}
+
+		#endregion Protected Methods
 	}
 }

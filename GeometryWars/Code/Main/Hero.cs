@@ -1,40 +1,57 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GeometryWars.Code.Emiters;
-using GeometryWars.Code.Main;
+﻿using GeometryWars.Code.Main;
 using GeometryWars.Code.Projectiles;
 using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
+using System.Collections.Generic;
 
 namespace GeometryWars.Code
 {
 	class Hero : Movable
 	{
-		static SoundBuffer fireSound = new SoundBuffer("Assets/SFX/Fire_homing.ogg");
-		private static Texture heroTexture = new Texture("Assets/Textures/hero.png");
-		private const float heroSpeed = 500f;
-		private const float heroAngleSpeed = 200f;
-		private const int spraySize = 10;
-		private const float fireDelay = 0.05f;
-		private float fireDelta = 0;
-		private bool canFire = true;
-		private static Hero hero;
-		Vector2f direction = new Vector2f();
-		private int life;
+		#region Private Fields
 		private const float bombCooldown = 5f;
-		private static bool canFireBomb = true;
-		private static float bombDelta;
+		private const float fireDelay = 0.05f;
+		private const float heroAngleSpeed = 200f;
+		private const float heroSpeed = 500f;
+		private const int spraySize = 10;
+		private const int totalBombs = 5;
+		private static SoundBuffer fireSound = new SoundBuffer("Assets/SFX/Fire_homing.ogg");
+		private static Hero hero;
+		private static Texture heroTexture = new Texture("Assets/Textures/hero.png");
+		private int bombCount;
+		private float bombDelta;
+		private bool canFire = true;
+		private bool canFireBomb = true;
+		private float fireDelta = 0;
 		private int lastLife;
+		private int life;
 		private int multiplierResetStep = 5;
+		#endregion Private Fields
+
+		#region Private Constructors
+
+		private Hero(Vector2f pos, float initAngle)
+			: base(pos, initAngle, heroTexture)
+		{
+			life = 100;
+			lastLife = life - multiplierResetStep;
+			bombCount = totalBombs;
+		}
+
+		#endregion Private Constructors
+
+		#region Public Properties
 
 		public static float Speed
 		{
 			get { return heroSpeed; }
+		}
+
+		public int BombCount
+		{
+			get { return bombCount; }
 		}
 
 		public int Life
@@ -42,42 +59,46 @@ namespace GeometryWars.Code
 			get { return life; }
 		}
 
-		public Vector2f Direction
-		{
-			get { return direction; }
-		}
+		#endregion Public Properties
+
+		#region Public Methods
 
 		public static Hero GetInstance()
 		{
-			
-			if(hero == null)
+			if (hero == null)
 				hero = new Hero(new Vector2f(Game.GAME_X_LIMIT * 0.5f, Game.GAME_Y_LIMIT * 0.5f), 0);
 			return hero;
-
 		}
 
-		private Hero(Vector2f pos, float initAngle) 
-			: base(pos, initAngle, heroTexture)
+		public void Reset()
 		{
-
 			life = 100;
 			lastLife = life - multiplierResetStep;
+			bombCount = totalBombs;
+			Bomb.Fire(Pos);
+			ScoreManager.Reset();
+		}
 
+		public void TakeDamage(int damage)
+		{
+			life -= damage;
+			if (life < lastLife)
+			{
+				ScoreManager.ResetMulti();
+				lastLife -= multiplierResetStep;
+			}
 		}
 
 		public override void Update(float timeDelta, IEnumerable<Drawable> entities = null)
 		{
-
 			if (life < 1)
 			{
-				life = 100;
-				lastLife = life - multiplierResetStep;
-				Bomb.Fire(Pos);
-				ScoreManager.Reset();
+				Reset();
 			}
 
-			if ((Keyboard.IsKeyPressed(Keyboard.Key.Return) || Controller.GetBombKey()) && canFireBomb)
+			if ((Keyboard.IsKeyPressed(Keyboard.Key.Return) || Controller.GetBombKey()) && canFireBomb && bombCount > 0)
 			{
+				bombCount--;
 				canFireBomb = false;
 				Bomb.Fire(Pos);
 			}
@@ -99,7 +120,7 @@ namespace GeometryWars.Code
 				EntityManager.AddProjectile(new HeroProjectile(Pos + Common.MovePointByAngle(heroTexture.Size.X * 0.3f, Angle), Angle + Game.rnd.Next(-spraySize, spraySize)));
 				Game.PlaySound(fireSound);
 			}
-			else if(canFire && Controller.FireIsNotCentered)
+			else if (canFire && Controller.FireIsNotCentered)
 			{
 				float fireAngle = Common.AngleBetweenTwoPoints(new Vector2f(), Controller.GetShootAxis());
 				canFire = false;
@@ -107,7 +128,7 @@ namespace GeometryWars.Code
 				Game.PlaySound(fireSound);
 			}
 
-			if(!canFire)
+			if (!canFire)
 				fireDelta += timeDelta;
 
 			if (fireDelta > fireDelay)
@@ -118,6 +139,10 @@ namespace GeometryWars.Code
 
 			base.Update(timeDelta, entities);
 		}
+
+		#endregion Public Methods
+
+		#region Protected Methods
 
 		protected override Vector2f GetNextMove(float timeDelta)
 		{
@@ -137,38 +162,22 @@ namespace GeometryWars.Code
 
 			if (Controller.IsConnected && pos == new Vector2f())
 			{
-
-				if(Controller.MoveIsNotCentered)
+				if (Controller.MoveIsNotCentered)
 					Angle = Common.AngleBetweenTwoPoints(new Vector2f(), Controller.GetMoveAxis());
 
 				pos += Common.MovePointByAngle(heroSpeed, Angle) *
 						Common.DistanceBetweenTwoPoints(new Vector2f(), Controller.GetMoveAxis() / 100);
-
 			}
-
-			if(pos != new Vector2f())
-				direction = pos;
 
 			return pos;
 		}
 
 		protected override void HandleCollision(Drawable entity)
 		{
-
 			entity.Delete();
 			//Maybe remove this, not sure yet
-
 		}
 
-		public void TakeDamage(int damage)
-		{
-			life -= damage;
-			if (life < lastLife)
-			{
-				ScoreManager.ResetMulti();
-				lastLife -= multiplierResetStep;
-			}
-		}
-
+		#endregion Protected Methods
 	}
 }

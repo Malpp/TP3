@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GeometryWars.Code.Emmiters;
+﻿using GeometryWars.Code.Emmiters;
 using GeometryWars.Code.Main;
 using SFML.Audio;
 using SFML.Graphics;
@@ -13,16 +8,26 @@ namespace GeometryWars.Code
 {
 	abstract class Enemy : Movable
 	{
-		private float moveSpeed;
+		#region Private Fields
 		private float angleSpeed;
 		private Color color;
-		SoundBuffer dieingSound = new SoundBuffer("Assets/SFX/Enemy_explode.wav");
+		private SoundBuffer dieingSound = new SoundBuffer("Assets/SFX/Enemy_explode.wav");
+		private float moveSpeed;
+		#endregion Private Fields
 
-		public float MoveSpeed
+		#region Protected Constructors
+
+		protected Enemy(Vector2f pos, float initAngle, float moveSpeed, float angleSpeed, Texture texture, Color mainColor)
+			: base(pos, initAngle, texture)
 		{
-			get { return moveSpeed; }
-			protected set { moveSpeed = value; }
+			this.moveSpeed = moveSpeed;
+			this.angleSpeed = angleSpeed;
+			color = mainColor;
 		}
+
+		#endregion Protected Constructors
+
+		#region Public Properties
 
 		public float AngleSpeed
 		{
@@ -30,45 +35,48 @@ namespace GeometryWars.Code
 			protected set { angleSpeed = value; }
 		}
 
-		//public bool CanShoot
-		//{
-		//	get { return }
-		//}
-
-		protected Enemy(Vector2f pos, float initAngle, float moveSpeed, float angleSpeed, Texture texture, Color mainColor)
-			: base(pos, initAngle, texture)
+		public float MoveSpeed
 		{
-
-			this.moveSpeed = moveSpeed;
-			this.angleSpeed = angleSpeed;
-			color = mainColor;
-
+			get { return moveSpeed; }
+			protected set { moveSpeed = value; }
 		}
 
-		protected override void HandleCollision(Drawable entity)
-		{
-			Hero.GetInstance().TakeDamage(5);
-		}
+		#endregion Public Properties
 
-	    protected abstract int AddScore();
+		#region Public Methods
 
 		public override void Delete()
 		{
-
-			if(Bomb.CanEnemiesSpawn)
+			if (Bomb.CanEnemiesSpawn)
 				ScoreManager.AddScore(AddScore());
 
-			EntityManager.AddEmitter(new EnemyExplosionEmiter(Pos, 5, color));
+			EntityManager.AddEmitter(new EnemyExplosionEmiter(Pos, color));
 
 			Game.PlaySound(dieingSound);
 
 			base.Delete();
 		}
 
+		#endregion Public Methods
+
+		#region Protected Methods
+
+		protected abstract int AddScore();
+
 		protected override Vector2f GetNextMove(float timeDelta)
 		{
 			return new Vector2f();
 		}
 
+		//public bool CanShoot
+		//{
+		//	get { return }
+		//}
+		protected override void HandleCollision(Drawable entity)
+		{
+			Hero.GetInstance().TakeDamage(5);
+		}
+
+		#endregion Protected Methods
 	}
 }

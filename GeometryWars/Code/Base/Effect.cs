@@ -1,31 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SFML.Graphics;
+﻿using SFML.Graphics;
 
 namespace GeometryWars.Code.Base
 {
-    abstract class Effect : SFML.Graphics.Drawable
-    {
+	abstract class Effect : SFML.Graphics.Drawable
+	{
+		#region Public Methods
 
-        public void Update(Texture texture, float sigma, float glow)
-        {
-            if (Shader.IsAvailable)
-                OnUpdate(texture, sigma, glow);
-        }
+		public void Draw(RenderTarget target, RenderStates states)
+		{
+			if (Shader.IsAvailable)
+			{
+				OnDraw(target, states);
+			}
+		}
 
-        public void Draw(RenderTarget target, RenderStates states)
-        {
-            if (Shader.IsAvailable)
-            {
-                OnDraw(target, states);
-            }
-        }
+		public void Update(Texture texture, float sigma, float glow)
+		{
+			if (Shader.IsAvailable)
+				OnUpdate(texture, sigma, glow);
+		}
 
-        protected abstract void OnUpdate(Texture texture, float sigma, float glow);
-        protected abstract void OnDraw(RenderTarget target, RenderStates states);
-        
-    }
+		#endregion Public Methods
+
+		#region Protected Methods
+
+		protected abstract void OnDraw(RenderTarget target, RenderStates states);
+
+		protected abstract void OnUpdate(Texture texture, float sigma, float glow);
+
+		#endregion Protected Methods
+	}
 }

@@ -1,22 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SFML.Graphics;
+﻿using SFML.Graphics;
 using SFML.System;
 
 namespace GeometryWars.Code
 {
 	abstract class Drawable
 	{
+		#region Protected Fields
 		protected Sprite sprite;
-		private bool toDelete = false;
+		#endregion Protected Fields
 
-		public bool ToDelete
+		#region Private Fields
+		private bool toDelete = false;
+		#endregion Private Fields
+
+		#region Protected Constructors
+
+		protected Drawable(Vector2f pos, float angle, Texture texture)
 		{
-			get { return toDelete; }
+			sprite = new Sprite(texture);
+			sprite.Origin = (Vector2f)texture.Size * 0.5f;
+			sprite.Rotation = angle;
+			sprite.Position = pos;
 		}
+
+		#endregion Protected Constructors
+
+		#region Public Properties
 
 		public FloatRect GlobalBounds
 		{
@@ -28,15 +37,14 @@ namespace GeometryWars.Code
 			get { return (Vector2f)sprite.Texture.Size; }
 		}
 
-		protected Drawable(Vector2f pos, float angle, Texture texture)
+		public bool ToDelete
 		{
-
-			sprite = new Sprite(texture);
-			sprite.Origin = (Vector2f)texture.Size * 0.5f;
-			sprite.Rotation = angle;
-			sprite.Position = pos;
-
+			get { return toDelete; }
 		}
+
+		#endregion Public Properties
+
+		#region Public Methods
 
 		public virtual void Delete()
 		{
@@ -45,10 +53,9 @@ namespace GeometryWars.Code
 
 		public virtual void Draw(RenderTarget window)
 		{
-
 			window.Draw(sprite);
-
 		}
 
+		#endregion Public Methods
 	}
 }

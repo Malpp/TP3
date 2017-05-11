@@ -1,26 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SFML.Graphics;
+﻿using SFML.Graphics;
 using SFML.System;
-using SFML.Window;
+using System;
+using System.Collections.Generic;
 
 namespace GeometryWars.Code
 {
 	abstract class Movable : Drawable
 	{
-
+		#region Private Fields
 		private float angle;
-		private Vector2f pos;
 		private Vector2f nextPos;
+		private Vector2f pos;
+		#endregion Private Fields
 
-		public Vector2f Pos
+		#region Protected Constructors
+
+		protected Movable(Vector2f pos, float initAngle, Texture texture)
+			: base(pos, initAngle, texture)
 		{
-			get { return pos; }
-			protected set { pos = value; }
+			angle = initAngle;
+			this.pos = pos;
 		}
+
+		#endregion Protected Constructors
+
+		#region Public Properties
 
 		public float Angle
 		{
@@ -30,40 +34,33 @@ namespace GeometryWars.Code
 
 		public Vector2f LastPos
 		{
-			get { return Pos - nextPos; }
+			get { return pos - nextPos; }
 		}
 
-		protected Movable(Vector2f pos, float initAngle, Texture texture)
-			: base(pos, initAngle, texture)
+		public Vector2f Pos
 		{
-
-			angle = initAngle;
-			this.pos = pos;
-
+			get { return pos; }
+			protected set { pos = value; }
 		}
 
-		protected virtual void HandleEdge()
+		#endregion Public Properties
+
+		#region Public Methods
+
+		public virtual void DoCollisions(IEnumerable<Drawable> entities)
 		{
-
-			Pos = new Vector2f(
-
-				Math.Max(Game.BORDER_SIZE + TextureSize.X * 0.5f,
-					Math.Min(Game.GAME_X_LIMIT - Game.BORDER_SIZE - TextureSize.X * 0.5f, sprite.Position.X)),
-
-				Math.Max(Game.BORDER_SIZE + TextureSize.Y * 0.5f,
-					Math.Min(Game.GAME_Y_LIMIT - Game.BORDER_SIZE - TextureSize.Y * 0.5f, sprite.Position.Y)));
-
+			foreach (Drawable entity in entities)
+			{
+				if (!entity.ToDelete && sprite.GetGlobalBounds().Intersects(entity.GlobalBounds))
+				{
+					HandleCollision(entity);
+				}
+			}
 		}
-
-		protected abstract void HandleCollision(Drawable entity);
-
-		protected abstract Vector2f GetNextMove(float timeDelta);
 
 		public virtual void Update(float timeDelta, IEnumerable<Drawable> entities = null)
 		{
-
 			nextPos = GetNextMove(timeDelta) * timeDelta;
-
 			Pos += nextPos;
 
 			if (entities != null)
@@ -76,36 +73,11 @@ namespace GeometryWars.Code
 
 			sprite.Position = Pos;
 			sprite.Rotation = Angle;
-
 		}
 
-		public virtual void DoCollisions(IEnumerable<Drawable> entities)
-		{
+		#endregion Public Methods
 
-			foreach (Drawable entity in entities)
-			{
-
-				if (!entity.ToDelete && sprite.GetGlobalBounds().Intersects(entity.GlobalBounds))
-				{
-					HandleCollision(entity);
-				}
-
-			}
-
-		}
-
-		private bool IsAtEdge()
-		{
-
-			if (sprite.Position.X > Game.GAME_X_LIMIT - Game.BORDER_SIZE - TextureSize.X * 0.5f ||
-				sprite.Position.X < Game.BORDER_SIZE + TextureSize.X * 0.5f ||
-				sprite.Position.Y > Game.GAME_Y_LIMIT - Game.BORDER_SIZE - TextureSize.Y * 0.5f ||
-				sprite.Position.Y < Game.BORDER_SIZE + TextureSize.Y * 0.5f)
-				return true;
-
-			return false;
-
-		}
+		#region Protected Methods
 
 		protected float CorrectAngle(float _angle)
 		{
@@ -120,8 +92,38 @@ namespace GeometryWars.Code
 				correctedAngle = 360 - correctedAngle;
 
 			return correctedAngle;
-
 		}
 
+		protected abstract Vector2f GetNextMove(float timeDelta);
+
+		protected abstract void HandleCollision(Drawable entity);
+
+		protected virtual void HandleEdge()
+		{
+			Pos = new Vector2f(
+
+				Math.Max(Game.BORDER_SIZE + TextureSize.X * 0.5f,
+					Math.Min(Game.GAME_X_LIMIT - Game.BORDER_SIZE - TextureSize.X * 0.5f, sprite.Position.X)),
+
+				Math.Max(Game.BORDER_SIZE + TextureSize.Y * 0.5f,
+					Math.Min(Game.GAME_Y_LIMIT - Game.BORDER_SIZE - TextureSize.Y * 0.5f, sprite.Position.Y)));
+		}
+
+		#endregion Protected Methods
+
+		#region Private Methods
+
+		private bool IsAtEdge()
+		{
+			if (sprite.Position.X > Game.GAME_X_LIMIT - Game.BORDER_SIZE - TextureSize.X * 0.5f ||
+				sprite.Position.X < Game.BORDER_SIZE + TextureSize.X * 0.5f ||
+				sprite.Position.Y > Game.GAME_Y_LIMIT - Game.BORDER_SIZE - TextureSize.Y * 0.5f ||
+				sprite.Position.Y < Game.BORDER_SIZE + TextureSize.Y * 0.5f)
+				return true;
+
+			return false;
+		}
+
+		#endregion Private Methods
 	}
 }

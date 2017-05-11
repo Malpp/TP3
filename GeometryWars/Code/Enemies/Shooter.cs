@@ -1,56 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SFML.Graphics;
+﻿using SFML.Graphics;
 using SFML.System;
+using System;
+using System.Collections.Generic;
 
 namespace GeometryWars.Code.Enemies
 {
 	class Shooter : FollowerEnemy
 	{
-
-		private static Texture shooterTexture = new Texture("Assets/Textures/shooter.png");
-		private const float shooterSpeed = 300f;
+		#region Private Fields
+		private const float fireSpeed = 1f;
+		private const int pointsWorth = 10;
 		private const float shooterAngleSpeed = 125f;
-		private const float fireSpeed = 0.3f;
-		private float fireDelta = 0;
+		private const float shooterSpeed = 300f;
+		private static Color color = new Color(7, 0, 234);
+		private static Texture shooterTexture = new Texture("Assets/Textures/shooter.png");
 		private bool canFire = false;
 		private bool correctAngle = false;
-		private static Color color = new Color(7, 0, 234);
-        private const int pointsWorth = 10;
+		private float fireDelta = 0;
+		#endregion Private Fields
 
-        public Shooter(Vector2f pos, float initAngle)
+		#region Public Constructors
+
+		public Shooter(Vector2f pos, float initAngle)
 			: base(pos, initAngle, shooterSpeed, shooterAngleSpeed, shooterTexture, color)
 		{
-
 		}
 
-		protected override Vector2f GetNextMove(float timeDelta)
-		{
-			float distance = Common.DistanceBetweenTwoPoints(Hero.GetInstance().Pos, Pos);
+		#endregion Public Constructors
 
-			if (distance > 210f)
-			{
-
-				return Common.MovePointByAngle(shooterSpeed, Angle);
-
-			}
-			else if (distance < 200f)
-			{
-
-				return Common.MovePointByAngle(-shooterSpeed, Angle);
-
-			}
-
-			return new Vector2f();
-		}
+		#region Public Methods
 
 		public override void Update(float timeDelta, IEnumerable<Drawable> entities = null)
 		{
-			 
-			if (Math.Abs( Common.AngleBetweenTwoPoints(Pos, Hero.GetInstance().Pos) - CorrectAngle(Angle)) < 1f)
+			if (Math.Abs(Common.AngleBetweenTwoPoints(Pos, Hero.GetInstance().Pos) - CorrectAngle(Angle)) < 1f)
 				correctAngle = true;
 			else
 				correctAngle = false;
@@ -63,7 +45,6 @@ namespace GeometryWars.Code.Enemies
 
 			if (!canFire)
 			{
-
 				fireDelta += timeDelta;
 
 				if (fireDelta > fireSpeed)
@@ -71,15 +52,36 @@ namespace GeometryWars.Code.Enemies
 					fireDelta = 0;
 					canFire = true;
 				}
-
 			}
 
 			base.Update(timeDelta, entities);
 		}
 
-	    protected override int AddScore()
-	    {
-	        return pointsWorth;
-	    }
+		#endregion Public Methods
+
+		#region Protected Methods
+
+		protected override int AddScore()
+		{
+			return pointsWorth;
+		}
+
+		protected override Vector2f GetNextMove(float timeDelta)
+		{
+			float distance = Common.DistanceBetweenTwoPoints(Hero.GetInstance().Pos, Pos);
+
+			if (distance > 210f)
+			{
+				return Common.MovePointByAngle(shooterSpeed, Angle);
+			}
+			else if (distance < 200f)
+			{
+				return Common.MovePointByAngle(-shooterSpeed, Angle);
+			}
+
+			return new Vector2f();
+		}
+
+		#endregion Protected Methods
 	}
 }

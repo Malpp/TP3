@@ -1,42 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GeometryWars.Code.Main
+﻿namespace GeometryWars.Code.Main
 {
-    static class ScoreManager
-    {
-        private static int score = 0;
-        private static int multiplier = 1;
+	static class ScoreManager
+	{
+		#region Private Fields
+		private static int multiplier = 1;
+		private static int score = 0;
+		#endregion Private Fields
 
-        public static int Score
-        {
-            get { return score; }
+		#region Public Properties
 
-        }
+		public static int Multi
+		{
+			get { return multiplier; }
+		}
 
-        public static int Multi
-        {
-            get { return multiplier; }
-        }
+		public static int Score
+		{
+			get { return score; }
+		}
 
-        public static void AddScore(int scoreToAdd)
-        {
-            score += scoreToAdd * multiplier;
-        }
+		#endregion Public Properties
 
-        public static void Reset()
-        {
-            multiplier = 1;
-            score = 0;
-        }
+		#region Public Methods
 
-	    public static void ResetMulti()
-	    {
-		    multiplier = 1;
-	    }
+		public static void AddScore(int scoreToAdd)
+		{
+			score += scoreToAdd * multiplier;
+		}
 
-    }
+		public static void Reset()
+		{
+			multiplier = 1;
+			score = 0;
+		}
+
+		public static void ResetMulti()
+		{
+			multiplier = 1;
+		}
+
+		#endregion Public Methods
+	}
 }
