@@ -75,6 +75,7 @@ namespace GeometryWars.Code.Enemies
 		protected override void HandleCollision(Drawable entity)
 		{
 			Delete();
+			base.HandleCollision(entity);
 		}
 
 		#endregion Protected Methods
