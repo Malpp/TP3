@@ -30,7 +30,6 @@
 
 		public static void Reset()
 		{
-			multiplier = 1;
 			score = 0;
 		}
 

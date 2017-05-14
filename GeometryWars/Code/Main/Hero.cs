@@ -28,7 +28,7 @@ namespace GeometryWars.Code
 		private float fireDelta = 0;
 		private int lastLife;
 		private int life;
-		private int multiplierResetStep = 5;
+		private int multiplierResetStep = 10;
 		private int enemyKills;
 		#endregion Private Fields
 

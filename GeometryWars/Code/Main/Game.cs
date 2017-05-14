@@ -15,8 +15,8 @@ namespace GeometryWars
 	{
 		#region Public Fields
 		public const int BORDER_SIZE = 5;
-		public const int GAME_HEIGHT = 720;
-		public const int GAME_WIDTH = 1240;
+		public const int GAME_HEIGHT = 1080;
+		public const int GAME_WIDTH = 1920;
 		public static readonly Texture ParticleTexture = new Texture("Assets/Particles/particle.png");
 		public static Random rnd = new Random();
 		#endregion Public Fields

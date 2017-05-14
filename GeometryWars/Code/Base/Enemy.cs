@@ -24,7 +24,7 @@ namespace GeometryWars.Code
 			this.angleSpeed = angleSpeed;
 			color = mainColor;
 		}
-
+		
 		#endregion Protected Constructors
 
 		#region Public Properties
@@ -74,7 +74,7 @@ namespace GeometryWars.Code
 		//}
 		protected override void HandleCollision(Drawable entity)
 		{
-			Hero.GetInstance().TakeDamage(5);
+			Hero.GetInstance().TakeDamage(2);
 		}
 
 		#endregion Protected Methods
