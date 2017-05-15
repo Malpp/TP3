@@ -4,7 +4,7 @@ using System;
 
 namespace GeometryWars.Code.Main
 {
-	enum ControllerType
+	internal enum ControllerType
 	{
 		GameCube = 48813,
 		XboxWireless = 673

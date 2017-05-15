@@ -1,5 +1,4 @@
-﻿using GeometryWars.Code.Main;
-using SFML.Audio;
+﻿using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
 

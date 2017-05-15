@@ -24,7 +24,7 @@ namespace GeometryWars.Code
 			this.angleSpeed = angleSpeed;
 			color = mainColor;
 		}
-		
+
 		#endregion Protected Constructors
 
 		#region Public Properties

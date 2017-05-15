@@ -8,26 +8,32 @@ namespace GeometryWars.Code.Main
 	public class StringTable
 	{
 		#region Public Fields
+
 		/// <summary>
 		/// The number of locales
 		/// </summary>
 		public const int NoOfLocales = 2;
+
 		#endregion Public Fields
 
 		#region Private Fields
 		private static StringTable stringTable;
+
 		/// <summary>
 		/// The current locale
 		/// </summary>
 		private int currentLocal = 0;
+
 		/// <summary>
 		/// The locales
 		/// </summary>
 		private string[] locales = new[] { "en", "fr" };
+
 		/// <summary>
 		/// The words
 		/// </summary>
 		private Dictionary<string, string[]> words = new Dictionary<string, string[]>();
+
 		#endregion Private Fields
 
 		#region Private Constructors

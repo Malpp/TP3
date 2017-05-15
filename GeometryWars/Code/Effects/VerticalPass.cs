@@ -1,5 +1,4 @@
-﻿using System;
-using GeometryWars.Code.Base;
+﻿using GeometryWars.Code.Base;
 using SFML.Graphics;
 
 namespace GeometryWars.Code.Effects
@@ -56,7 +55,7 @@ namespace GeometryWars.Code.Effects
 			myShader.SetParameter("sigma", sigma);
 			myShader.SetParameter("glowMultiplier", glow);
 		}
-		
+
 		#endregion Protected Methods
 	}
 }

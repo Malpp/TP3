@@ -56,6 +56,7 @@
 			else
 				multiplier = 1;
 		}
+
 		#endregion Public Methods
 	}
 }

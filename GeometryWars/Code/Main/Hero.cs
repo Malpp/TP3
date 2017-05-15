@@ -1,5 +1,4 @@
-﻿using System;
-using GeometryWars.Code.Main;
+﻿using GeometryWars.Code.Main;
 using GeometryWars.Code.Projectiles;
 using SFML.Audio;
 using SFML.Graphics;
@@ -25,11 +24,11 @@ namespace GeometryWars.Code
 		private float bombDelta;
 		private bool canFire = true;
 		private bool canFireBomb = true;
+		private int enemyKills;
 		private float fireDelta = 0;
 		private int lastLife;
 		private int life;
 		private int multiplierResetStep = 10;
-		private int enemyKills;
 		#endregion Private Fields
 
 		#region Private Constructors
@@ -65,17 +64,17 @@ namespace GeometryWars.Code
 
 		#region Public Methods
 
-		public void AddEnemyKill()
-		{
-			enemyKills++;
-			ScoreManager.UpdateMultiplier(enemyKills);
-		}
-
 		public static Hero GetInstance()
 		{
 			if (hero == null)
 				hero = new Hero(new Vector2f(Game.GAME_X_LIMIT * 0.5f, Game.GAME_Y_LIMIT * 0.5f), 0);
 			return hero;
+		}
+
+		public void AddEnemyKill()
+		{
+			enemyKills++;
+			ScoreManager.UpdateMultiplier(enemyKills);
 		}
 
 		public void Reset()

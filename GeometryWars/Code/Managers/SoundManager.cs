@@ -5,8 +5,12 @@ namespace GeometryWars.Code.Main
 {
 	static class SoundManager
 	{
+		#region Private Fields
 		private static Queue<Sound> sounds = new Queue<Sound>(1000);
 		private static float volume = 10;
+		#endregion Private Fields
+
+		#region Public Methods
 
 		public static void AddSound(SoundBuffer sound)
 		{
@@ -24,5 +28,7 @@ namespace GeometryWars.Code.Main
 				sounds.Dequeue().Dispose();
 			}
 		}
+
+		#endregion Public Methods
 	}
 }
